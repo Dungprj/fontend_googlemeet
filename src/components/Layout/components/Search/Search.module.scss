@@ -9,13 +9,14 @@
     padding-left: 16px;
     display: flex;
     position: relative;
+    font-family: var(--font-family);
     border: 1.5px solid transparent;
 
     input {
         flex: 1;
         height: 100%;
         color: var(--black);
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         border: none;
         outline: none;
         background-color: transparent;
@@ -81,8 +82,8 @@
     font-size: 1.3rem;
     color: rgba(22, 24, 35, 0.34);
 
-    &:hover {
-        background-color: rgba(22, 24, 35, 0.08);
-        cursor: pointer;
-    }
+    // &:hover {
+    //     background-color: rgba(22, 24, 35, 0.08);
+    //     cursor: pointer;
+    // }
 }

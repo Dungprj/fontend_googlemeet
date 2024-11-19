@@ -11,6 +11,7 @@
     --text-color: #161823;
 
     --default-layout-horizontal-spacer: 24px;
+    --font-family: 'ProximaNova', sans-serif;
 }
 
 * {
@@ -24,7 +25,7 @@
 }
 
 body {
-    font-family: 'ProximaNova', sans-serif;
+    font-family: var(--font-family);
     font-size: 1.6rem;
     line-height: 1.5;
     text-rendering: optimizeSpeed;
@@ -32,17 +33,17 @@ body {
 }
 //Fonts embedded
 @font-face {
-    font-family: ProximaNova;
+    font-family: var(--font-family);
     src: url('../../assets/fonts/TikTokFont-Regular.woff2');
     font-weight: 400;
 }
 @font-face {
-    font-family: ProximaNova;
+    font-family: var(--font-family);
     src: url('../../assets/fonts/TikTokFont-Semibold.woff2');
     font-weight: 600;
 }
 @font-face {
-    font-family: ProximaNova;
+    font-family: var(--font-family);
     src: url('../../assets/fonts/TikTokFont-Bold.woff2');
     font-weight: 700;
 }

@@ -51,6 +51,16 @@ function Search() {
         setShowResult(state);
     };
 
+    const handleChange = (e) => {
+        const searchValue = e.target.value;
+        if (!searchValue.startsWith(' ')) {
+            setSearchValue(searchValue);
+            console.log('vao day');
+        }
+    };
+
+    const handleSubmit = (e) => {};
+
     return (
         <HeadlessTippy
             interactive={true}
@@ -76,9 +86,7 @@ function Search() {
                     value={searchValue}
                     placeholder="Search Account and videos"
                     spellCheck={false}
-                    onChange={(e) => {
-                        setSearchValue(e.target.value);
-                    }}
+                    onChange={handleChange}
                     onFocus={() => {
                         handlevisibleResult(true);
                     }}
@@ -92,7 +100,7 @@ function Search() {
 
                 {loading && <FontAwesomeIcon className={cx('loading')} icon={faSpinner} />}
 
-                <button className={cx('search-btn')}>
+                <button className={cx('search-btn')} onClick={handleSubmit} onMouseDown={(e) => e.preventDefault}>
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
                 </button>
             </div>
