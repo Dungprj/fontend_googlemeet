@@ -1,6 +1,6 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { publicRoutes } from '~/routes';
-import { DefaultLayout } from '~/components/Layout';
+import DefaultLayout from '~/layouts';
 import { Fragment } from 'react';
 
 const router = createBrowserRouter(
