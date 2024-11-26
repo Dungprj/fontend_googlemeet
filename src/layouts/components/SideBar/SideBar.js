@@ -44,7 +44,7 @@ function SideBar() {
 
             <SuggestedAcoutnts label={'Suggested accounts'} />
 
-            <SuggestedAcoutnts label={'Following accounts'} />
+            {/* <SuggestedAcoutnts label={'Following accounts'} /> */}
         </aside>
     );
 }
