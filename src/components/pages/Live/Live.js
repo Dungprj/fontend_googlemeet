@@ -1,5 +1,5 @@
 function Live() {
-    return <h1>Live Page</h1>;
+    return <h2 style={{ height: 2000 }}>Live page</h2>;
 }
 
 export default Live;
