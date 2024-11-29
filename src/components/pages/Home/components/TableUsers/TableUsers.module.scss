@@ -1,0 +1,17 @@
+.add-new {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sort-header {
+    color: red;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    i {
+        cursor: pointer;
+        padding: 0 2px;
+    }
+}

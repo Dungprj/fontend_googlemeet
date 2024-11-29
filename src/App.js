@@ -2,6 +2,10 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { publicRoutes } from '~/routes';
 import DefaultLayout from '~/layouts';
 import { Fragment } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 const router = createBrowserRouter(
     publicRoutes.map((route, index) => {
@@ -20,18 +24,34 @@ const router = createBrowserRouter(
                 <Layout>
                     <Page />
                 </Layout>
-            ),
+            )
         };
     }),
     {
         future: {
-            v7_startTransition: true, // Kích hoạt cờ này để thử tính năng mới
-        },
-    },
+            v7_startTransition: true // Kích hoạt cờ này để thử tính năng mới
+        }
+    }
 );
 
 function App() {
-    return <RouterProvider router={router} />;
+    return (
+        <>
+            <ToastContainer
+                position='top-right'
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme='light'
+            />
+            <RouterProvider router={router} />;
+        </>
+    );
 }
 
 export default App;
