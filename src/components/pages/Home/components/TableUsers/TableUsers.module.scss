@@ -15,3 +15,13 @@
         padding: 0 2px;
     }
 }
+
+.group-btn {
+    width: 300px;
+    display: flex;
+    justify-content: space-between;
+
+    i {
+        margin-right: 5px;
+    }
+}

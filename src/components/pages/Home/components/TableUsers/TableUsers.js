@@ -12,6 +12,11 @@ import ModalComfirm from './Modal/Comfirm';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { useDebounce } from '~/hooks';
 
+import { CSVLink, CSVDownload } from 'react-csv';
+
+import Papa from 'papaparse';
+import { toast } from 'react-toastify';
+
 import _ from 'lodash';
 
 const cx = classNames.bind(styles);
@@ -38,6 +43,8 @@ function TableUsers(props) {
 
     const [keyWord, setKeyWord] = useState('');
     const debouncedValue = useDebounce(keyWord, 500);
+
+    const [dataExport, setDataExport] = useState([]);
 
     const handleClose = () => {
         setIsShowModalAddNew(false);
@@ -174,10 +181,88 @@ function TableUsers(props) {
         return () => {};
     }, [debouncedValue]);
 
+    const handleImportCSV = e => {
+        if (e.target && e.target.files && e.target.files[0]) {
+            let file = e.target.files[0];
+
+            if (file.type !== 'text/csv') {
+                toast.error('Please select a CSV file.');
+                return;
+            }
+
+            // Parse local CSV file
+            Papa.parse(file, {
+                complete: function (results) {
+                    let rawCSV = results.data;
+                    console.log(results);
+                    if (rawCSV.length > 0) {
+                        if (rawCSV[0] && rawCSV[0].length === 3) {
+                            if (
+                                rawCSV[0][0] === 'email' ||
+                                rawCSV[0][1] === 'first_name' ||
+                                rawCSV[0][2] === 'last_name'
+                            ) {
+                                toast.success('upload CSV file');
+
+                                let dataUploadFilter = rawCSV.filter(
+                                    (item, index) =>
+                                        index > 0 && item.length === 3
+                                );
+
+                                let dataUploadHandled = dataUploadFilter.map(
+                                    (item, index) => {
+                                        return {
+                                            email: item[0],
+                                            first_name: item[1],
+                                            last_name: item[2],
+                                            id: index + 1
+                                        };
+                                    }
+                                );
+
+                                setListUsers(dataUploadHandled);
+
+                                console.log('data upload', dataUploadHandled);
+                            } else {
+                                toast.error('Wrong format column for CSV file');
+                            }
+                        } else {
+                            toast.error('Wrong format Header for CSV file');
+                            return;
+                        }
+                    } else {
+                        toast.error('No data in CSV file.');
+                        return;
+                    }
+                }
+            });
+        }
+    };
+
     const handleSearch = e => {
         const result = e.target.value;
 
         setKeyWord(result);
+    };
+
+    const getuserExport = (event, done) => {
+        let result = [];
+        if (listUsers && listUsers.length > 0) {
+            result.push(['Id', 'Email', 'First Name', 'Last Name']);
+            listUsers.forEach((item, index) => {
+                let arr = [];
+
+                arr[0] = item.id;
+                arr[1] = item.email;
+                arr[2] = item.first_name;
+                arr[3] = item.last_name;
+
+                result.push(arr);
+            });
+
+            setDataExport(result);
+            done();
+        }
     };
 
     useEffect(() => {
@@ -189,14 +274,44 @@ function TableUsers(props) {
         <>
             <div className={cx('add-new', 'my-3')}>
                 <span>List Users:</span>
-                <button
-                    className='btn btn-success'
-                    onClick={() => {
-                        setIsShowModalAddNew(true);
-                    }}
-                >
-                    Add new user
-                </button>
+
+                <div className={cx('group-btn')}>
+                    <label
+                        className='btn btn-warning'
+                        htmlFor='import-file-btn'
+                    >
+                        <i class='fa-solid fa-file-import'></i>Import
+                    </label>
+                    <span>
+                        <input
+                            onChange={e => {
+                                handleImportCSV(e);
+                            }}
+                            id='import-file-btn'
+                            type='file'
+                            hidden
+                        ></input>
+                    </span>
+
+                    <CSVLink
+                        data={dataExport}
+                        filename={'user.csv'}
+                        className='btn btn-primary'
+                        target='_blank'
+                        asyncOnClick={true}
+                        onClick={getuserExport}
+                    >
+                        <i class='fa-solid fa-file-arrow-down'></i> Export
+                    </CSVLink>
+                    <button
+                        className='btn btn-success'
+                        onClick={() => {
+                            setIsShowModalAddNew(true);
+                        }}
+                    >
+                        <i className='fa-solid fa-circle-plus'> Add</i>
+                    </button>
+                </div>
             </div>
 
             <div className='col-4 my-3'>
