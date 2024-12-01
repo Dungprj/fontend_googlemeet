@@ -9,11 +9,11 @@ import Upload from '~/components/pages/Upload';
 import Search from '~/components/pages/Search';
 import Live from '~/components/pages/Live';
 
-import TableUsers from '~/components/pages/Home/components/TableUsers/TableUsers';
+import TableUsers from '~/components/pages/TableUsers/TableUsers';
 
 import config from '~/config';
 import Login from '~/components/pages/Login';
-import Logout from '~/components/pages/Logout';
+
 import register from '~/components/pages/Register';
 
 //Pulic routes
@@ -24,15 +24,14 @@ const publicRoutes = [
     { path: config.routes.upload, component: Upload, layout: HeaderOnly },
     { path: config.routes.search, component: Search, layout: null },
     { path: config.routes.live, component: Live },
-    { path: config.routes.managerUser, component: TableUsers },
 
     { path: config.routes.login, component: Login, layout: HeaderOnly },
-
-    { path: config.routes.logout, component: Logout },
 
     { path: config.routes.register, component: register }
 ];
 
-const privateRoutes = [];
+const privateRoutes = [
+    { path: config.routes.managerUser, component: TableUsers }
+];
 
 export { publicRoutes, privateRoutes };

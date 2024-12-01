@@ -25,6 +25,8 @@ import Search from '~/layouts/components/Search';
 import { Link } from 'react-router-dom';
 import images from '~/assets/images';
 import config from '~/config';
+import { UserContext } from '~/Context/UserContext';
+import React from 'react';
 
 const cx = classNames.bind(styles);
 
@@ -60,8 +62,10 @@ const MENU_ITEMS = [
 ];
 
 function Header() {
-    const currentUser = localStorage.getItem('token');
+    const { user } = React.useContext(UserContext);
+    const currentUser = user && user.auth;
 
+    console.log('trang thai', currentUser);
     //handle logic
     const handleMenuChange = menuItem => {
         console.log(menuItem);
@@ -153,7 +157,7 @@ function Header() {
                     )}
 
                     <Menu
-                        items={currentUser ? userMenu : MENU_ITEMS}
+                        items={true ? userMenu : MENU_ITEMS}
                         onChange={handleMenuChange}
                     >
                         {currentUser ? (

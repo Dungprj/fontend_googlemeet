@@ -5,13 +5,14 @@ import classNames from 'classnames/bind';
 import styles from './Menu.module.scss';
 import { Wrapper as PopperWrapper } from '~/components/Popper/';
 import Header from './Header';
-
+import React from 'react';
 import MenuItem from './MenuItem';
 import PropTypes from 'prop-types';
 
 import { useNavigate } from 'react-router-dom';
 import config from '~/config';
 import { toast } from 'react-toastify';
+import { UserContext } from '~/Context/UserContext';
 
 const cx = classNames.bind(styles);
 
@@ -25,6 +26,7 @@ function Menu({
 }) {
     const [history, setHistory] = useState([{ data: items }]);
     const currentItem = history[history.length - 1];
+    const { logout } = React.useContext(UserContext);
 
     /*
         history = 
@@ -48,7 +50,7 @@ function Menu({
     const handleLogout = () => {
         const tokenCurrent = localStorage.getItem('token');
         if (tokenCurrent) {
-            localStorage.removeItem('token');
+            logout();
             toast.success('Logout was successful');
             navigate(config.routes.login);
         }

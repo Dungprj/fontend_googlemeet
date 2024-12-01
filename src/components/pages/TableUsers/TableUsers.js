@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import { fetchAllUser } from '~/Services/UserService';
 
@@ -18,6 +18,7 @@ import Papa from 'papaparse';
 import { toast } from 'react-toastify';
 
 import _ from 'lodash';
+import { UserContext } from '~/Context/UserContext';
 
 const cx = classNames.bind(styles);
 
@@ -25,6 +26,10 @@ function TableUsers(props) {
     const [listUsers, setListUsers] = useState([]);
     const [totalUsers, setTotalUsers] = useState(0);
     const [totalPages, setToTalPages] = useState(0);
+
+    const { user } = useContext(UserContext);
+
+    console.log('uc', user);
 
     //modal
 
@@ -280,7 +285,7 @@ function TableUsers(props) {
                         className='btn btn-warning'
                         htmlFor='import-file-btn'
                     >
-                        <i class='fa-solid fa-file-import'></i>Import
+                        <i className='fa-solid fa-file-import'></i>Import
                     </label>
                     <span>
                         <input
@@ -301,7 +306,7 @@ function TableUsers(props) {
                         asyncOnClick={true}
                         onClick={getuserExport}
                     >
-                        <i class='fa-solid fa-file-arrow-down'></i> Export
+                        <i className='fa-solid fa-file-arrow-down'></i> Export
                     </CSVLink>
                     <button
                         className='btn btn-success'

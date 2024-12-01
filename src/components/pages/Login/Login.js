@@ -7,20 +7,25 @@ import { LoginApi } from '~/Services/UserService';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import config from '~/config';
+import { UserContext } from '~/Context/UserContext';
+import React from 'react';
+
+import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 function Login() {
+    const { loginContext } = React.useContext(UserContext);
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const [isShowPassword, setIsShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
-
     useEffect(() => {
         let token = localStorage.getItem('token');
         if (token) {
             navigate(config.routes.home);
+
             return;
         }
     }, []);
@@ -36,10 +41,11 @@ function Login() {
         setLoading(true);
 
         if (res && res.token) {
+            loginContext(email, res.token);
+
             setTimeout(() => {
                 setLoading(false);
                 toast.success('Login successful');
-                localStorage.setItem('token', res.token);
                 navigate(config.routes.home);
             }, 2000);
         } else {
@@ -109,7 +115,8 @@ function Login() {
 
                 <div>
                     <Button>
-                        <i className='fa-solid fa-angles-left'></i> Go Back
+                        <i className='fa-solid fa-angles-left'></i>
+                        <Link to={config.routes.register}>Go Back</Link>
                     </Button>
                 </div>
             </div>
