@@ -19,17 +19,18 @@ function Button({
     onClick,
     leftIcon,
     rightIcon,
+
     ...passProps
 }) {
     let Comp = 'Button';
 
     const props = {
         onClick,
-        ...passProps,
+        ...passProps
     };
 
     if (disable) {
-        Object.keys(props).forEach((key) => {
+        Object.keys(props).forEach(key => {
             if (key.startsWith('on') && typeof props[key] === 'function') {
                 delete props[key];
             }
@@ -48,12 +49,13 @@ function Button({
         primary,
         outline,
         text,
+        disable,
         rounded,
         small,
         large,
         disable,
         rightIcon,
-        leftIcon,
+        leftIcon
     });
 
     return (
@@ -79,7 +81,7 @@ Button.propTypes = {
     className: PropTypes.string,
     leftIcon: PropTypes.node,
     rightIcon: PropTypes.node,
-    onClick: PropTypes.func,
+    onClick: PropTypes.func
 };
 
 export default Button;

@@ -60,7 +60,7 @@ const MENU_ITEMS = [
 ];
 
 function Header() {
-    const currentUser = true;
+    const currentUser = localStorage.getItem('token');
 
     //handle logic
     const handleMenuChange = menuItem => {
@@ -94,7 +94,6 @@ function Header() {
         {
             icon: <FontAwesomeIcon icon={faSignOut}></FontAwesomeIcon>,
             title: 'Log out',
-            to: '/logout',
             separate: true
         }
     ];
@@ -147,7 +146,9 @@ function Header() {
                             <Button text disable>
                                 Upload
                             </Button>
-                            <Button primary>Log in</Button>
+                            <Button href={config.routes.login} primary>
+                                Log in
+                            </Button>
                         </>
                     )}
 

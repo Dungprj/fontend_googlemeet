@@ -6,11 +6,7 @@ import { useState } from 'react';
 const cx = classNames.bind(styles);
 
 function Home() {
-    return (
-        <div style={{ height: 2000 }}>
-            <TableUsers />
-        </div>
-    );
+    return <div style={{ height: 2000 }}>Home Page</div>;
 }
 
 export default Home;

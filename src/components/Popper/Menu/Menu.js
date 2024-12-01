@@ -9,11 +9,20 @@ import Header from './Header';
 import MenuItem from './MenuItem';
 import PropTypes from 'prop-types';
 
+import { useNavigate } from 'react-router-dom';
+import config from '~/config';
+import { toast } from 'react-toastify';
+
 const cx = classNames.bind(styles);
 
 const defaultFn = () => {};
 
-function Menu({ children, items = [], hideOnClick = false, onChange = defaultFn }) {
+function Menu({
+    children,
+    items = [],
+    hideOnClick = false,
+    onChange = defaultFn
+}) {
     const [history, setHistory] = useState([{ data: items }]);
     const currentItem = history[history.length - 1];
 
@@ -30,7 +39,20 @@ function Menu({ children, items = [], hideOnClick = false, onChange = defaultFn 
             }
         
         ]
+
+
     */
+
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        const tokenCurrent = localStorage.getItem('token');
+        if (tokenCurrent) {
+            localStorage.removeItem('token');
+            toast.success('Logout was successful');
+            navigate(config.routes.login);
+        }
+    };
     const current = history[history.length - 1];
 
     const renderItems = () => {
@@ -43,10 +65,13 @@ function Menu({ children, items = [], hideOnClick = false, onChange = defaultFn 
                     data={item}
                     onClick={() => {
                         if (isParent) {
-                            setHistory((prev) => {
+                            setHistory(prev => {
                                 return [...prev, item.children];
                             });
                         } else {
+                            if (item.title === 'Log out') {
+                                handleLogout();
+                            }
                             onChange(item);
                         }
                     }}
@@ -56,13 +81,15 @@ function Menu({ children, items = [], hideOnClick = false, onChange = defaultFn 
     };
 
     const handleBack = () => {
-        setHistory((prev) => prev.slice(0, prev.length - 1));
+        setHistory(prev => prev.slice(0, prev.length - 1));
     };
 
-    const renderResult = (attrs) => (
-        <div className={cx('menu-list')} tabIndex="-1" {...attrs}>
+    const renderResult = attrs => (
+        <div className={cx('menu-list')} tabIndex='-1' {...attrs}>
             <PopperWrapper className={cx('menu-popper')}>
-                {history.length > 1 && <Header title={currentItem.title} onBack={handleBack} />}
+                {history.length > 1 && (
+                    <Header title={currentItem.title} onBack={handleBack} />
+                )}
                 <div className={cx('menu-body')}>{renderItems()}</div>
             </PopperWrapper>
         </div>
@@ -71,7 +98,7 @@ function Menu({ children, items = [], hideOnClick = false, onChange = defaultFn 
     //reset to first page
 
     const handleResetMenu = () => {
-        setHistory((prev) => {
+        setHistory(prev => {
             return prev.slice(0, 1);
         });
     };
@@ -82,7 +109,7 @@ function Menu({ children, items = [], hideOnClick = false, onChange = defaultFn 
             interactive={true}
             delay={[0, 800]}
             offset={[10, 8]}
-            placement="bottom-end"
+            placement='bottom-end'
             render={renderResult}
             onHidden={handleResetMenu}
         >
@@ -95,7 +122,7 @@ Menu.propTypes = {
     children: PropTypes.node.isRequired,
     items: PropTypes.array,
     hideOnClick: PropTypes.bool,
-    onChange: PropTypes.func,
+    onChange: PropTypes.func
 };
 
 export default Menu;
