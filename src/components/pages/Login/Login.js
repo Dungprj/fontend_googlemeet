@@ -128,7 +128,7 @@ function Login() {
                 <div>
                     <Button>
                         <i className='fa-solid fa-angles-left'></i>
-                        <Link to={config.routes.home}>Go Back</Link>
+                        <Link to={config.routes.home}>Go Back Home</Link>
                     </Button>
                 </div>
 
