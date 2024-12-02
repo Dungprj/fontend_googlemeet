@@ -5,8 +5,8 @@ function HeaderOnly({ children }) {
         <div>
             <Header />
 
-            <div className="container">
-                <div className="content">{children}</div>
+            <div className='container' style={{ marginTop: 100 }}>
+                <div className='content'>{children}</div>
             </div>
         </div>
     );

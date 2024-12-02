@@ -40,6 +40,13 @@ function SideBar() {
                     icon={<LiveIcon />}
                     activeIcon={<LiveActiveIcon />}
                 />
+
+                <MenuItem
+                    title='Quản lý user'
+                    to={config.routes.managerUser}
+                    icon={<LiveIcon />}
+                    activeIcon={<LiveActiveIcon />}
+                />
             </Menu>
 
             <SuggestedAcoutnts label={'Suggested accounts'} />

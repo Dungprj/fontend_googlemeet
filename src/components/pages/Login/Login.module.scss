@@ -1,0 +1,70 @@
+.login-container {
+    width: 500px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 20% auto;
+}
+
+.title {
+    text-align: center;
+    font-weight: 900;
+    font-size: 2.5rem;
+    color: var(--primary);
+}
+
+.inpUsername,
+.inpPassword {
+    outline: none;
+
+    &:hover {
+        background-color: #f1eaea;
+    }
+}
+
+.inpPassword {
+    width: 100%;
+}
+
+.container-password {
+    position: relative;
+}
+
+.isshowicon {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.btn-login {
+    position: relative;
+}
+
+.loading {
+    position: absolute;
+    font-size: 1.3rem;
+    animation: spinner 0.8s linear infinite;
+    top: 19px;
+    left: 41%;
+}
+
+@keyframes spinner {
+    from {
+        transform: translateY(-50%) rotate(0);
+    }
+
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
+}
+
+.bl_nav_register {
+    display: flex;
+    justify-content: center;
+
+    .txt_register {
+        color: var(--primary);
+    }
+}
