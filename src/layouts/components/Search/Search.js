@@ -1,4 +1,8 @@
-import { faCircleXmark, faMagnifyingGlass, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import {
+    faCircleXmark,
+    faMagnifyingGlass,
+    faSpinner
+} from '@fortawesome/free-solid-svg-icons';
 import HeadlessTippy from '@tippyjs/react/headless';
 import { Wrapper as PopperWrapper } from '~/components/Popper';
 import AccountItem from '~/components/AccountItem';
@@ -9,7 +13,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useDebounce } from '~/hooks';
 
-import * as searchServices from '~/Services/searchService';
+import { search } from '~/Services/UserService';
 
 const cx = classNames.bind(styles);
 
@@ -33,8 +37,10 @@ function Search() {
         const fetchApi = async () => {
             setLoading(true);
 
-            const result = await searchServices.search(debouncedValue);
-            setSearchResult(result);
+            const result = await search(debouncedValue);
+
+            console.log('ket qua tim kiem', result.data);
+            setSearchResult(result.data);
 
             setLoading(false);
         };
@@ -47,18 +53,18 @@ function Search() {
         inputRef.current.focus();
     };
 
-    const handlevisibleResult = (state) => {
+    const handlevisibleResult = state => {
         setShowResult(state);
     };
 
-    const handleChange = (e) => {
+    const handleChange = e => {
         const searchValue = e.target.value;
         if (!searchValue.startsWith(' ')) {
             setSearchValue(searchValue);
         }
     };
 
-    const handleSubmit = (e) => {};
+    const handleSubmit = e => {};
 
     return (
         //Using a wrapper <div> tag around the reference element solves
@@ -68,15 +74,19 @@ function Search() {
                 appendTo={() => document.body}
                 interactive={true}
                 visible={searchResult.length > 0 && showResult}
-                render={(attrs) => (
-                    <div className={cx('search-result')} tabIndex="-1" {...attrs}>
+                render={attrs => (
+                    <div
+                        className={cx('search-result')}
+                        tabIndex='-1'
+                        {...attrs}
+                    >
                         <PopperWrapper>
                             <h4 className={cx('search-title')}>Accounts</h4>
 
                             {/* có thể tách thành một component khác sử dụng react MEMO 
                             và useCallBack nếu danh sách render ra nhiều thứ lặp lại  */}
 
-                            {searchResult.map((result) => (
+                            {searchResult.map(result => (
                                 <AccountItem key={result.id} data={result} />
                             ))}
                         </PopperWrapper>
@@ -90,7 +100,7 @@ function Search() {
                     <input
                         ref={inputRef}
                         value={searchValue}
-                        placeholder="Search Account and videos"
+                        placeholder='Search Account and videos'
                         spellCheck={false}
                         onChange={handleChange}
                         onFocus={() => {
@@ -104,9 +114,18 @@ function Search() {
                         </button>
                     )}
 
-                    {loading && <FontAwesomeIcon className={cx('loading')} icon={faSpinner} />}
+                    {loading && (
+                        <FontAwesomeIcon
+                            className={cx('loading')}
+                            icon={faSpinner}
+                        />
+                    )}
 
-                    <button className={cx('search-btn')} onClick={handleSubmit} onMouseDown={(e) => e.preventDefault}>
+                    <button
+                        className={cx('search-btn')}
+                        onClick={handleSubmit}
+                        onMouseDown={e => e.preventDefault}
+                    >
                         <FontAwesomeIcon icon={faMagnifyingGlass} />
                     </button>
                 </div>

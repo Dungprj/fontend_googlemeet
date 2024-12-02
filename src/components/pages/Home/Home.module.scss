@@ -1,0 +1,16 @@
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f0f0;
+}
+
+@media (max-width: 768px) {
+    .home-container {
+        padding-top: 20px;
+    }
+
+    .home-header {
+        font-size: 24px;
+    }
+}

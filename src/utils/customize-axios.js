@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'https://reqres.in'
+    baseURL: process.env.REACT_APP_BASE_URL_AUTHEN,
+    timeout: 10000
 });
 
 // Add a response interceptor

@@ -12,17 +12,17 @@ const cx = classNames.bind(styles);
 function ModalAddNew(props) {
     const { show, handleClose, handleUpdateTable } = props;
 
-    const [name, setName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [job, setJob] = useState('');
 
     const handleSaveUser = async () => {
-        let res = await postCreateUser(name, job);
+        let res = await postCreateUser(lastName, job);
 
         if (res && res.id) {
-            setName('');
+            setLastName('');
             setJob('');
             toast.success('A User is created successfully');
-            handleUpdateTable({ first_name: name, id: res.id });
+            handleUpdateTable({ first_name: lastName, id: res.id });
             handleClose();
         } else {
             toast.error('An error ...');
@@ -46,10 +46,10 @@ function ModalAddNew(props) {
                             <div className='mb-3'>
                                 <label className='form-label'>Name</label>
                                 <input
-                                    value={name}
+                                    value={lastName}
                                     type='text'
                                     className='form-control'
-                                    onChange={e => setName(e.target.value)}
+                                    onChange={e => setLastName(e.target.value)}
                                 />
                             </div>
                             <div className='mb-3'>

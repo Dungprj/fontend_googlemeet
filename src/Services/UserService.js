@@ -1,7 +1,7 @@
 import axios from '~/utils/customize-axios';
 
 const fetchAllUser = page => {
-    return axios.get(`/api/users?page=${page}`);
+    return axios.get(`/api/User/GetUsers?page=${page}`);
 };
 
 const postCreateUser = (name, job) => {
@@ -17,6 +17,28 @@ const DeleteUser = id => {
 };
 
 const LoginApi = (email, password) => {
-    return axios.post('/api/login', { email: email, password });
+    return axios.post('/api/Account/SignIn', { email: email, password });
 };
-export { fetchAllUser, postCreateUser, putUpdateUser, DeleteUser, LoginApi };
+
+const GetVideos = () => {
+    return axios.get('/api/Videos');
+};
+
+const search = async (q, type = 'less') => {
+    return axios.get('/api/User/Search', {
+        params: {
+            q,
+            type
+        }
+    });
+};
+
+export {
+    fetchAllUser,
+    postCreateUser,
+    putUpdateUser,
+    DeleteUser,
+    LoginApi,
+    search,
+    GetVideos
+};

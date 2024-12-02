@@ -2,12 +2,22 @@ import React, { useEffect } from 'react';
 
 import config from '~/config';
 // @function  UserContext
-const UserContext = React.createContext({ email: '', auth: false });
+const UserContext = React.createContext({
+    email: '',
+    auth: false,
+
+    idVideoPlaying: null
+});
 
 // @function  UserProvider
 // Create function to provide UserContext
 const UserProvider = ({ children }) => {
-    const [user, setUser] = React.useState({ email: '', auth: false });
+    const [user, setUser] = React.useState({
+        email: '',
+        auth: false,
+
+        idVideoPlaying: null
+    });
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -21,6 +31,18 @@ const UserProvider = ({ children }) => {
             }));
         }
     }, []);
+
+    const PlayVideo = idVideo => {
+        setUser(prev => {
+            return { ...prev, idVideoPlaying: idVideo };
+        });
+    };
+
+    const PlauseVideo = () => {
+        setUser(prev => {
+            return { ...prev, idVideoPlaying: null };
+        });
+    };
 
     const loginContext = (email, token) => {
         localStorage.setItem('token', token);
@@ -44,7 +66,9 @@ const UserProvider = ({ children }) => {
     };
 
     return (
-        <UserContext.Provider value={{ user, loginContext, logout }}>
+        <UserContext.Provider
+            value={{ user, loginContext, logout, PlayVideo, PlauseVideo }}
+        >
             {children}
         </UserContext.Provider>
     );

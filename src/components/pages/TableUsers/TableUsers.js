@@ -204,8 +204,8 @@ function TableUsers(props) {
                         if (rawCSV[0] && rawCSV[0].length === 3) {
                             if (
                                 rawCSV[0][0] === 'email' ||
-                                rawCSV[0][1] === 'first_name' ||
-                                rawCSV[0][2] === 'last_name'
+                                rawCSV[0][1] === 'firstName' ||
+                                rawCSV[0][2] === 'lastName'
                             ) {
                                 toast.success('upload CSV file');
 
@@ -218,8 +218,8 @@ function TableUsers(props) {
                                     (item, index) => {
                                         return {
                                             email: item[0],
-                                            first_name: item[1],
-                                            last_name: item[2],
+                                            firstName: item[1],
+                                            lastName: item[2],
                                             id: index + 1
                                         };
                                     }
@@ -259,8 +259,8 @@ function TableUsers(props) {
 
                 arr[0] = item.id;
                 arr[1] = item.email;
-                arr[2] = item.first_name;
-                arr[3] = item.last_name;
+                arr[2] = item.firstName;
+                arr[3] = item.lastName;
 
                 result.push(arr);
             });
@@ -381,8 +381,8 @@ function TableUsers(props) {
                                     <tr key={`user-${index}`}>
                                         <td>{item.id}</td>
                                         <td>{item.email}</td>
-                                        <td>{item.first_name}</td>
-                                        <td>{item.last_name}</td>
+                                        <td>{item.firstName}</td>
+                                        <td>{item.lastName}</td>
                                         <td>
                                             <button
                                                 onClick={() => {

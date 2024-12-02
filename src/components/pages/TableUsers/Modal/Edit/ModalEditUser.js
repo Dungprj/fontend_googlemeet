@@ -12,17 +12,17 @@ const cx = classNames.bind(styles);
 function ModalEditUser(props) {
     const { show, handleClose, dataUserEdit, handleEditUserFromModal } = props;
 
-    const [name, setName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [job, setJob] = useState('');
 
     const handleEditUser = async () => {
         console.log(dataUserEdit);
-        let res = await putUpdateUser(dataUserEdit.id, name, job);
+        let res = await putUpdateUser(dataUserEdit.id, lastName, job);
 
         if (res && res.updatedAt) {
             handleEditUserFromModal({
                 id: dataUserEdit.id,
-                first_name: res.name
+                firstName: res.name
             });
 
             toast.success('A User is Update successfully');
@@ -33,7 +33,7 @@ function ModalEditUser(props) {
 
     useEffect(() => {
         if (show) {
-            setName(dataUserEdit.first_name);
+            setLastName(dataUserEdit.firstName);
             setJob(dataUserEdit.job);
         }
     }, [dataUserEdit]);
@@ -55,10 +55,10 @@ function ModalEditUser(props) {
                             <div className='mb-3'>
                                 <label className='form-label'>Name</label>
                                 <input
-                                    value={name}
+                                    value={lastName}
                                     type='text'
                                     className='form-control'
-                                    onChange={e => setName(e.target.value)}
+                                    onChange={e => setLastName(e.target.value)}
                                 />
                             </div>
                             <div className='mb-3'>

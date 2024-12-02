@@ -24,8 +24,8 @@ function Login() {
     const [isHandleLogin, setIsHandleLogin] = useState(true);
 
     useEffect(() => {
-        let token = localStorage.getItem('token');
-        if (token) {
+        let accessToken = localStorage.getItem('accessToken');
+        if (accessToken) {
             navigate(config.routes.home);
 
             return;
@@ -43,8 +43,10 @@ function Login() {
 
         setLoading(true);
 
-        if (res && res.token) {
-            loginContext(email.trim(), res.token);
+        console.log(res.data.accessToken);
+
+        if (res && res.data.accessToken) {
+            loginContext(email.trim(), res.data.accessToken);
 
             setTimeout(() => {
                 setLoading(false);
