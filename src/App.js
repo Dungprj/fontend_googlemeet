@@ -6,6 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
+import NotFound from '~/components/pages/NotFound/NotFound';
 
 import PrivateRoute from './routes/PrivateRoute';
 
@@ -50,7 +51,11 @@ const router = createBrowserRouter(
                     </Layout>
                 )
             };
-        })
+        }),
+        {
+            path: '*', // Fallback cho mọi route không xác định
+            element: <NotFound />
+        }
     ],
     {
         future: {

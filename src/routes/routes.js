@@ -27,7 +27,7 @@ const publicRoutes = [
 
     { path: config.routes.login, component: Login, layout: HeaderOnly },
 
-    { path: config.routes.register, component: register }
+    { path: config.routes.register, component: register, layout: HeaderOnly }
 ];
 
 const privateRoutes = [

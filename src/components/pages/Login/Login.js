@@ -21,6 +21,8 @@ function Login() {
 
     const [isShowPassword, setIsShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [isHandleLogin, setIsHandleLogin] = useState(true);
+
     useEffect(() => {
         let token = localStorage.getItem('token');
         if (token) {
@@ -36,12 +38,13 @@ function Login() {
     };
 
     const handleLogin = async () => {
-        let res = await LoginApi(email, password);
+        setIsHandleLogin(false);
+        let res = await LoginApi(email.trim(), password);
 
         setLoading(true);
 
         if (res && res.token) {
-            loginContext(email, res.token);
+            loginContext(email.trim(), res.token);
 
             setTimeout(() => {
                 setLoading(false);
@@ -58,9 +61,15 @@ function Login() {
         }
     };
 
+    const handlePressEnter = async e => {
+        if (e && e.code === 'Enter' && isHandleLogin) {
+            await handleLogin();
+        }
+    };
+
     return (
         <>
-            <div className={cx('login-container', 'col-6')}>
+            <div className={cx('login-container', 'col-sm-6 col-6')}>
                 <div className={cx('title')}>Login</div>
                 <div className={cx('')}>Email or username</div>
                 <input
@@ -80,6 +89,9 @@ function Login() {
                         placeholder='Password'
                         onChange={e => {
                             setPassword(e.target.value);
+                        }}
+                        onKeyDown={e => {
+                            handlePressEnter(e);
                         }}
                     />
                     <span className={cx('isshowicon')}>
@@ -116,7 +128,16 @@ function Login() {
                 <div>
                     <Button>
                         <i className='fa-solid fa-angles-left'></i>
-                        <Link to={config.routes.register}>Go Back</Link>
+                        <Link to={config.routes.home}>Go Back</Link>
+                    </Button>
+                </div>
+
+                <div className={cx('bl_nav_register')}>
+                    <Button>
+                        You don't have account ?{' '}
+                        <Link to={config.routes.register}>
+                            <span className={cx('txt_register')}>Register</span>
+                        </Link>
                     </Button>
                 </div>
             </div>
