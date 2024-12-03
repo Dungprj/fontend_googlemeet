@@ -13,10 +13,13 @@ function Home() {
     const playersRef = useRef([]); // Mảng refs để tham chiếu đến các video
     const [offset, setOffset] = useState(0); // Trạng thái dịch chuyển
     const touchStartRef = useRef(0); // Lưu vị trí touch start để xác định vuốt lên hay xuống
+    const [offsetMax, setOffsetMax] = useState(0);
 
+    const OFFSET = 650;
     const handleGetVideo = async () => {
         let res = await GetVideos();
         if (res) {
+            setOffsetMax(res.length * OFFSET - OFFSET);
             setVideos(res);
         } else {
             toast.error('Get videos fail');
@@ -78,14 +81,15 @@ function Home() {
         const diff = touchStartRef.current - touchEnd; // Tính toán sự thay đổi giữa start và move
 
         if (Math.abs(diff) > 30) {
-            // Chỉ thực hiện khi sự thay đổi đủ lớn (30px)
-            if (diff > 0) {
-                // Vuốt lên
-                setOffset(prev => prev - 680); // Dịch chuyển lên 680px
-            } else {
-                // Vuốt xuống
-                setOffset(prev => prev + 680); // Dịch chuyển xuống 680px
+            // Kiểm tra vuốt lên
+            if (diff > 0 && offset > -offsetMax) {
+                // Vuốt lên và chưa đạt tới video cuối cùng
+                setOffset(prev => prev - OFFSET); // Dịch chuyển lên 680px
+            } else if (diff < 0 && offset < 0) {
+                // Vuốt xuống và chưa đạt tới video đầu tiên
+                setOffset(prev => prev + OFFSET); // Dịch chuyển xuống 680px
             }
+
             touchStartRef.current = touchEnd; // Cập nhật lại vị trí start sau mỗi lần di chuyển
         }
     };
