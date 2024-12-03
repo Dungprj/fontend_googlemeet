@@ -16,3 +16,10 @@
 .content {
     flex: 1;
 }
+
+// Media Query để ẩn Sidebar trên thiết bị di động
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; // Đặt container thành cột trên thiết bị di động
+    }
+}
