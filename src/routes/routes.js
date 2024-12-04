@@ -15,13 +15,16 @@ import config from '~/config';
 import Login from '~/components/pages/Login';
 
 import register from '~/components/pages/Register';
+import UploadDetail from '~/components/pages/Upload/component/UploadDetail/UploadDetail';
 
 //Pulic routes
 const publicRoutes = [
     { path: config.routes.home, component: Home },
     { path: config.routes.following, component: Following },
     { path: config.routes.profile, component: Profile },
-    { path: config.routes.upload, component: Upload, layout: HeaderOnly },
+    { path: config.routes.upload, component: Upload },
+    { path: config.routes.uploaddetail, component: UploadDetail },
+
     { path: config.routes.search, component: Search, layout: null },
     { path: config.routes.live, component: Live },
 

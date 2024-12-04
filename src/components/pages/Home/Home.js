@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import Video from '~/components/Video'; // Import Video component
+import Video from '~/components/Video';
 import classNames from 'classnames/bind';
 import styles from './Home.module.scss';
 import { GetVideos } from '~/Services/UserService';
@@ -9,10 +9,10 @@ const cx = classNames.bind(styles);
 
 function Home() {
     const [videos, setVideos] = useState([]);
-    const [playingIndex, setPlayingIndex] = useState(null); // Trạng thái lưu index của video đang phát
-    const playersRef = useRef([]); // Mảng refs để tham chiếu đến các video
-    const [offset, setOffset] = useState(0); // Trạng thái dịch chuyển
-    const touchStartRef = useRef(0); // Lưu vị trí touch start để xác định vuốt lên hay xuống
+    const [playingIndex, setPlayingIndex] = useState(null);
+    const playersRef = useRef([]);
+    const [offset, setOffset] = useState(0);
+    const touchStartRef = useRef(0);
     const [offsetMax, setOffsetMax] = useState(0);
 
     const OFFSET = 650;
@@ -55,51 +55,49 @@ function Home() {
         }
     };
 
-    // Hàm kiểm tra xem video có nằm trong viewport không
     const handleIntersect = (isIntersecting, videoElement) => {
         const index = videoElement.dataset.index;
         if (isIntersecting) {
-            // Nếu video vào viewport, phát video
             if (playingIndex !== index) {
                 handlePlayVideo(index);
             }
         } else {
-            // Nếu video ra khỏi viewport, dừng video
             if (playingIndex === index) {
                 handlePauseVideo(index);
             }
         }
     };
 
-    // Hàm xử lý khi vuốt lên hoặc vuốt xuống
     const handleTouchStart = e => {
-        touchStartRef.current = e.touches[0].clientY; // Lưu vị trí touch start
+        touchStartRef.current = e.touches[0].clientY;
     };
 
     const handleTouchMove = e => {
-        const touchEnd = e.touches[0].clientY; // Vị trí touch khi di chuyển
-        const diff = touchStartRef.current - touchEnd; // Tính toán sự thay đổi giữa start và move
+        const touchEnd = e.touches[0].clientY;
+        const diff = touchStartRef.current - touchEnd;
 
         if (Math.abs(diff) > 30) {
-            // Kiểm tra vuốt lên
             if (diff > 0 && offset > -offsetMax) {
-                // Vuốt lên và chưa đạt tới video cuối cùng
-                setOffset(prev => prev - OFFSET); // Dịch chuyển lên 680px
+                setOffset(prev => prev - OFFSET);
             } else if (diff < 0 && offset < 0) {
-                // Vuốt xuống và chưa đạt tới video đầu tiên
-                setOffset(prev => prev + OFFSET); // Dịch chuyển xuống 680px
+                setOffset(prev => prev + OFFSET);
             }
 
-            touchStartRef.current = touchEnd; // Cập nhật lại vị trí start sau mỗi lần di chuyển
+            touchStartRef.current = touchEnd;
         }
     };
 
-    const handleTouchEnd = () => {
-        // Xử lý khi kết thúc vuốt (có thể làm gì đó nếu cần)
+    const handleTouchEnd = () => {};
+
+    const scrollUp = () => {
+        if (offset < 0) setOffset(prev => prev + OFFSET);
+    };
+
+    const scrollDown = () => {
+        if (offset > -offsetMax) setOffset(prev => prev - OFFSET);
     };
 
     useEffect(() => {
-        // Lấy dữ liệu video từ API
         handleGetVideo();
     }, []);
 
@@ -110,19 +108,18 @@ function Home() {
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
         >
-            {/* Hiển thị danh sách video */}
             <div className={cx('wrap-video')}>
                 <div
                     className={cx('video-list')}
                     style={{
-                        transform: `translateY(${offset}px)`, // Dịch chuyển div
-                        transition: 'transform 0.3s ease' // Hiệu ứng mượt mà
+                        transform: `translateY(${offset}px)`,
+                        transition: 'transform 0.3s ease'
                     }}
                 >
                     {videos.map((item, index) => (
                         <div key={item.id} onClick={() => handleVideo(index)}>
                             <Video
-                                ref={el => (playersRef.current[index] = el)} // Gán ref vào mảng refs
+                                ref={el => (playersRef.current[index] = el)}
                                 src={`${process.env.REACT_APP_BASE_URL_AUTHEN}${item?.filePath}`}
                                 title={item?.title}
                                 description={item?.description}
@@ -130,6 +127,16 @@ function Home() {
                         </div>
                     ))}
                 </div>
+            </div>
+
+            {/* Nút lướt lên và xuống */}
+            <div className={cx('scroll-buttons')}>
+                <button className={cx('scroll-up')} onClick={scrollUp}>
+                    ↑
+                </button>
+                <button className={cx('scroll-down')} onClick={scrollDown}>
+                    ↓
+                </button>
             </div>
         </div>
     );

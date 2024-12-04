@@ -120,9 +120,12 @@ function Header() {
                                 content='Upload video'
                                 placement='bottom'
                             >
-                                <button className={cx('action-btn')}>
+                                <Button
+                                    className={cx('action-btn')}
+                                    to={config.routes.upload}
+                                >
                                     <UploadIcon />
-                                </button>
+                                </Button>
                             </Tippy>
 
                             <Tippy
@@ -130,27 +133,27 @@ function Header() {
                                 content='Message'
                                 placement='bottom'
                             >
-                                <button className={cx('action-btn')}>
+                                <Button className={cx('action-btn')}>
                                     <MessageIcon />
-                                </button>
+                                </Button>
                             </Tippy>
                             <Tippy
                                 delay={[0, 50]}
                                 content='Inbox'
                                 placement='bottom'
                             >
-                                <button className={cx('action-btn')}>
+                                <Button className={cx('action-btn')}>
                                     <InboxIcon />
                                     <span className={cx('badge')}>12</span>
-                                </button>
+                                </Button>
                             </Tippy>
                         </>
                     ) : (
                         <>
-                            <Button text disable>
+                            <Button text disable to={config.routes.upload}>
                                 Upload
                             </Button>
-                            <Button href={config.routes.login} primary>
+                            <Button to={config.routes.login} primary>
                                 Log in
                             </Button>
                         </>

@@ -33,6 +33,17 @@ const search = async (q, type = 'less') => {
     });
 };
 
+const Upload = async formData => {
+    // Gửi yêu cầu POST với FormData
+    const response = await axios.post('/api/Videos/upload', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data' // Quan trọng để gửi file
+        }
+    });
+
+    return response; // Trả về kết quả sau khi upload thành công
+};
+
 export {
     fetchAllUser,
     postCreateUser,
@@ -40,5 +51,6 @@ export {
     DeleteUser,
     LoginApi,
     search,
-    GetVideos
+    GetVideos,
+    Upload
 };

@@ -39,7 +39,10 @@
     background-color: transparent;
     font-size: 1.5rem;
     color: #161823;
-    padding: 4px 12px;
+    min-width: 70px !important;
+
+    padding: 0px !important;
+
     cursor: pointer;
 }
 

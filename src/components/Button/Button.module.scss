@@ -80,6 +80,14 @@
     }
 }
 
+.gray {
+    background-color: #eae4e4;
+
+    &:hover {
+        background-color: #b9b3b3;
+    }
+}
+
 //Button size
 
 .small {
