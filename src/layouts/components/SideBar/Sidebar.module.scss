@@ -3,6 +3,17 @@
     padding: 20px 0 26px 0px;
     margin-left: -16px;
 }
+.logo {
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 15px;
+}
+
+.search {
+    width: 100%;
+    height: auto;
+}
+
 @media (max-width: 768px) {
     .wrapper {
         display: none !important;

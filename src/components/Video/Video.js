@@ -31,19 +31,15 @@ const Video = (props, ref) => {
     });
 
     return (
-        <div className='video-container'>
-            <div className={cx('video-wrap-player')}>
-                <video
-                    className={classes}
-                    ref={videoRef}
-                    src={props.src}
-                    loop
-                    controls={props.controls}
-                    width='100%'
-                    height='100%'
-                    poster={props.poster ? props.poster : images.noImage}
-                />
-            </div>
+        <div className={cx('video-container')}>
+            <video
+                className={classes}
+                ref={videoRef}
+                src={props.src}
+                loop
+                controls={props.controls}
+                // poster={props.poster ? props.poster : images.noImage}
+            />
         </div>
     );
 };

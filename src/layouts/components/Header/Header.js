@@ -105,14 +105,14 @@ function Header() {
     return (
         <header className={cx('wrapper')}>
             <div className={cx('inner')}>
-                <Link to={config.routes.home} className={cx('logo-link')}>
+                {/* <Link to={config.routes.home} className={cx('logo-link')}>
                     <img src={images.logo} alt='Tiktok' />
-                </Link>
+                </Link> */}
 
                 {/* search */}
-                <Search />
+                {/* <Search /> */}
 
-                <div className={cx('actions')}>
+                {/* <div className={cx('actions')}>
                     {currentUser ? (
                         <>
                             <Tippy
@@ -180,7 +180,7 @@ function Header() {
                             </>
                         )}
                     </Menu>
-                </div>
+                </div> */}
             </div>
         </header>
     );

@@ -17,7 +17,7 @@ function Home() {
 
     const refListVideo = useRef();
 
-    const OFFSET = 730;
+    const OFFSET = 780;
     const handleGetVideo = async () => {
         let res = await GetVideos();
         if (res) {
@@ -94,11 +94,15 @@ function Home() {
             scrollDown();
         }
     };
+    const handleScroll = e => {
+        e.preventDefault();
+    };
 
     useEffect(() => {
         handleGetVideo();
         // Lắng nghe sự kiện bàn phím khi component mounted
         window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('scroll', handleScroll);
 
         // Cleanup khi component unmount
         return () => {
@@ -124,12 +128,15 @@ function Home() {
                 >
                     {videos.map((item, index) => (
                         <div key={item.id} onClick={() => handleVideo(index)}>
-                            <Video
-                                ref={el => (playersRef.current[index] = el)}
-                                src={`${process.env.REACT_APP_BASE_URL_AUTHEN}${item?.filePath}`}
-                                title={item?.title}
-                                description={item?.description}
-                            />
+                            <div className={cx('video-wrap-player')}>
+                                <Video
+                                    className={cx('videoItem')}
+                                    ref={el => (playersRef.current[index] = el)}
+                                    src={`${process.env.REACT_APP_BASE_URL_AUTHEN}${item?.filePath}`}
+                                    title={item?.title}
+                                    description={item?.description}
+                                />
+                            </div>
                         </div>
                     ))}
                 </div>

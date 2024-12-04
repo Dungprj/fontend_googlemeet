@@ -213,19 +213,17 @@ function UploadDetail() {
                 </div>
 
                 <div className={cx('panel-right')}>
-                    <div>
-                        <div
-                            className={cx('wrap-video-preview')}
-                            onClick={handleClickVideo}
-                        >
-                            <Video
-                                className={cx('video-preview')}
-                                ref={ref}
-                                src={videoSrc}
-                                controls={true}
-                                poster={thumbnail}
-                            />
-                        </div>
+                    <div
+                        className={cx('wrap-video-preview')}
+                        onClick={handleClickVideo}
+                    >
+                        <Video
+                            className={cx('video-preview')}
+                            ref={ref}
+                            src={videoSrc}
+                            controls={true}
+                            poster={thumbnail}
+                        />
                     </div>
                 </div>
             </div>

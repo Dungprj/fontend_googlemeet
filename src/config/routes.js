@@ -7,7 +7,7 @@ const routes = {
     search: '/search',
     live: '/live',
     managerUser: '/managerUser',
-
+    foryou: '/foryou',
     login: '/login',
     logout: '/logout',
     register: '/register'
