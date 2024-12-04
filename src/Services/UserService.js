@@ -33,13 +33,9 @@ const search = async (q, type = 'less') => {
     });
 };
 
-const Upload = async formData => {
+const Upload = async (formData, config) => {
     // Gửi yêu cầu POST với FormData
-    const response = await axios.post('/api/Videos/upload', formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data' // Quan trọng để gửi file
-        }
-    });
+    const response = await axios.post('/api/Videos/upload', formData, config);
 
     return response; // Trả về kết quả sau khi upload thành công
 };

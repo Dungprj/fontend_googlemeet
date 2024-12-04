@@ -6,8 +6,15 @@
     background-color: #f0f0f0;
 }
 .wrap-video {
-    max-height: 680px;
+    max-height: 730px;
     overflow: hidden;
+}
+
+.video-list {
+    display: flex;
+    flex-direction: column;
+
+    background-color: red;
 }
 
 .scroll-buttons {

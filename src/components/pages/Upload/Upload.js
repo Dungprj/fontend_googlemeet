@@ -17,56 +17,26 @@ const cx = classNames.bind(styles);
 function Upload() {
     const [file, setFile] = useState(null);
     const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [isUploading, setIsUploading] = useState(false);
-    const [uploadProgress, setUploadProgress] = useState(0);
+
     const navigate = useNavigate();
 
     const handleFileChange = e => {
         setFile(e.target.files[0]); // Lưu trữ file đã chọn
     };
 
-    const handleUpload = async () => {
-        if (!file) {
-            toast.error('Please select a video file first!');
-
-            return;
+    // Hàm xử lý khi người dùng kéo và thả file vào div
+    const handleDrop = e => {
+        e.preventDefault(); // Ngăn chặn hành động mặc định của trình duyệt
+        const droppedFile = e.dataTransfer.files[0]; // Lấy file đầu tiên từ đối tượng dataTransfer
+        if (droppedFile) {
+            setFile(droppedFile); // Lưu trữ file đã kéo thả
         }
+    };
 
-        setIsUploading(true);
-
-        setUploadProgress(0);
-
-        try {
-            const formData = new FormData();
-            formData.append('title', title);
-            formData.append('description', description);
-            formData.append('file', file);
-
-            const config = {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                },
-                onUploadProgress: progressEvent => {
-                    const progress = Math.round(
-                        (progressEvent.loaded / progressEvent.total) * 100
-                    );
-                    setUploadProgress(progress); // Cập nhật tiến trình
-                }
-            };
-
-            const response = await UploadApi(formData, config); // Gọi API upload
-            console.log('Upload successful', response);
-
-            // Xử lý kết quả sau khi upload thành công
-            setIsUploading(false);
-            setUploadProgress(100);
-            alert('Video uploaded successfully!');
-        } catch (err) {
-            console.error('Error during upload:', err);
-            toast.error('Upload failed. Please try again.');
-            setIsUploading(false);
-        }
+    // Hàm xử lý khi kéo file vào vùng drop
+    const handleDragOver = e => {
+        console.log('vao day');
+        e.preventDefault(); // Ngăn chặn hành động mặc định (để cho phép thả file)
     };
 
     useEffect(() => {
@@ -83,7 +53,12 @@ function Upload() {
 
     return (
         <div className={cx('wrap-container')}>
-            <div className={cx('wrap-background')}>
+            <label
+                className={cx('wrap-background')}
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                htmlFor='import-file-btn'
+            >
                 <div className={cx('wrap')}>
                     <input
                         className={cx('inp-file')}
@@ -110,11 +85,15 @@ function Upload() {
                         </div>
 
                         <div className={cx('wrap-btn-select-video')}>
-                            <Button primary>Select video</Button>
+                            <Button primary>
+                                <label htmlFor='import-file-btn'>
+                                    Select video
+                                </label>
+                            </Button>
                         </div>
                     </div>
                 </div>
-            </div>
+            </label>
 
             <div className={cx('wrap-required-upload')}>
                 <div className={cx('item-required-upload')}>

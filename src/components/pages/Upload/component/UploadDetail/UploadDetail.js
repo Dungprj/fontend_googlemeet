@@ -53,10 +53,7 @@ function UploadDetail() {
                     const progress = Math.round(
                         (progressEvent.loaded / progressEvent.total) * 100
                     );
-                    // Tạo một độ trễ giả lập (100ms)
-                    setTimeout(() => {
-                        setUploadProgress(progress); // Cập nhật tiến trình với độ trễ
-                    }, 100); // Thêm độ trễ giả lập 100ms
+                    setUploadProgress(progress); // Cập nhật tiến trình với độ trễ
                 }
             };
 

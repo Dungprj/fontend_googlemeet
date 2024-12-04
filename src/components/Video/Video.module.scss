@@ -1,7 +1,8 @@
 .video-wrap-player {
-    max-width: 360px;
-    max-height: 880px;
-    min-height: 650px;
+    max-width: 380px;
+    min-width: 360px;
+
+    min-height: 730px;
     background-color: black;
     display: flex;
     align-items: center;
@@ -11,4 +12,5 @@
 }
 
 .videoItem {
+    object-fit: cover;
 }

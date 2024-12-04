@@ -15,7 +15,9 @@ function Home() {
     const touchStartRef = useRef(0);
     const [offsetMax, setOffsetMax] = useState(0);
 
-    const OFFSET = 650;
+    const refListVideo = useRef();
+
+    const OFFSET = 730;
     const handleGetVideo = async () => {
         let res = await GetVideos();
         if (res) {
@@ -55,19 +57,6 @@ function Home() {
         }
     };
 
-    const handleIntersect = (isIntersecting, videoElement) => {
-        const index = videoElement.dataset.index;
-        if (isIntersecting) {
-            if (playingIndex !== index) {
-                handlePlayVideo(index);
-            }
-        } else {
-            if (playingIndex === index) {
-                handlePauseVideo(index);
-            }
-        }
-    };
-
     const handleTouchStart = e => {
         touchStartRef.current = e.touches[0].clientY;
     };
@@ -96,10 +85,26 @@ function Home() {
     const scrollDown = () => {
         if (offset > -offsetMax) setOffset(prev => prev - OFFSET);
     };
+    // Lắng nghe sự kiện bàn phím
+    const handleKeyDown = e => {
+        e.preventDefault();
+        if (e.key === 'ArrowUp') {
+            scrollUp();
+        } else if (e.key === 'ArrowDown') {
+            scrollDown();
+        }
+    };
 
     useEffect(() => {
         handleGetVideo();
-    }, []);
+        // Lắng nghe sự kiện bàn phím khi component mounted
+        window.addEventListener('keydown', handleKeyDown);
+
+        // Cleanup khi component unmount
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [offset, offsetMax]);
 
     return (
         <div
@@ -110,6 +115,7 @@ function Home() {
         >
             <div className={cx('wrap-video')}>
                 <div
+                    ref={refListVideo}
                     className={cx('video-list')}
                     style={{
                         transform: `translateY(${offset}px)`,
