@@ -20,6 +20,8 @@ function Home() {
     const OFFSET = 780;
     const handleGetVideo = async () => {
         let res = await GetVideos();
+
+        console.log('res ', res);
         if (res) {
             setOffsetMax(res.length * OFFSET - OFFSET);
             setVideos(res);
@@ -30,26 +32,26 @@ function Home() {
 
     const handlePlayVideo = index => {
         if (playingIndex === null) {
-            playersRef.current[index].play();
+            playersRef.current[index]?.play();
             setPlayingIndex(index);
         } else {
             if (playingIndex === index) {
-                playersRef.current[index].play();
+                playersRef.current[index]?.play();
                 setPlayingIndex(index);
             } else {
-                playersRef.current[index].play();
-                playersRef.current[playingIndex].pause();
+                playersRef.current[index]?.play();
+                playersRef.current[playingIndex]?.pause();
                 setPlayingIndex(index);
             }
         }
     };
 
     const handlePauseVideo = index => {
-        playersRef.current[index].pause();
+        playersRef.current[index]?.pause();
     };
 
     const handleVideo = index => {
-        const status = playersRef.current[index].isPlay();
+        const status = playersRef.current[index]?.isPlay();
         if (status) {
             handlePauseVideo(index);
         } else {
@@ -132,7 +134,8 @@ function Home() {
                                 <Video
                                     className={cx('videoItem')}
                                     ref={el => (playersRef.current[index] = el)}
-                                    src={`${process.env.REACT_APP_BASE_URL_AUTHEN}${item?.filePath}`}
+                                    // src={`${process.env.REACT_APP_BASE_URL_AUTHEN}${item?.filePath}`}
+                                    src={`https://drive.google.com/file/d/${item?.fileId}/preview`}
                                     title={item?.title}
                                     description={item?.description}
                                 />

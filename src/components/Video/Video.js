@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useImperativeHandle } from 'react';
-import ReactPlayer from 'react-player';
+
 import classNames from 'classnames/bind';
 import styles from './Video.module.scss';
 import { UserContext } from '~/Context/UserContext';
@@ -16,13 +16,13 @@ const Video = (props, ref) => {
 
     useImperativeHandle(ref, () => ({
         play() {
-            return videoRef.current.play();
+            return videoRef.current?.play();
         },
         pause() {
-            return videoRef.current.pause();
+            return videoRef.current?.pause();
         },
         isPlay() {
-            return !videoRef.current.paused;
+            return !videoRef.current?.paused;
         }
     }));
 
@@ -32,14 +32,26 @@ const Video = (props, ref) => {
 
     return (
         <div className={cx('video-container')}>
-            <video
+            {/* Dùng cho phiên bản lưu video ở máy chủ */}
+            {/* <video
                 className={classes}
                 ref={videoRef}
                 src={props.src}
                 loop
                 controls={props.controls}
                 // poster={props.poster ? props.poster : images.noImage}
-            />
+            /> */}
+
+            {
+                <iframe
+                    className={classes}
+                    ref={videoRef}
+                    src={props.src}
+                    width='100%'
+                    height='100%'
+                    // allow='autoplay'
+                ></iframe>
+            }
         </div>
     );
 };
