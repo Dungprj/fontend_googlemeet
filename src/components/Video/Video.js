@@ -49,6 +49,7 @@ const Video = (props, ref) => {
                     src={props.src}
                     width='100%'
                     height='100%'
+
                     // allow='autoplay'
                 ></iframe>
             }

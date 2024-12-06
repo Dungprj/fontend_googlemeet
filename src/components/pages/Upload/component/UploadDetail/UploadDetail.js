@@ -59,7 +59,7 @@ function UploadDetail() {
 
             const response = await UploadApi(formData, config); // Gọi API upload
             if (response) {
-                console.log('res :', response);
+                console.log('res sau khi upload :', response);
                 if (response && response.id) {
                     toast.success('Upload thành công!');
                 } else {
