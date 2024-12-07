@@ -11,8 +11,6 @@ import { forwardRef } from 'react';
 const cx = classNames.bind(styles);
 const Video = (props, ref) => {
     const videoRef = useRef(null);
-    const { user, PlayVideo, PlauseVideo, className } =
-        React.useContext(UserContext);
 
     useImperativeHandle(ref, () => ({
         play() {
@@ -27,32 +25,42 @@ const Video = (props, ref) => {
     }));
 
     const classes = cx('videoItem', {
-        [className]: className
+        [props.className]: props.className
     });
+
+    const handleUrlIFrame = src => {
+        let srcSplit = src.split('id=');
+
+        console.log('sau xu ly', srcSplit);
+        return srcSplit[1];
+    };
 
     return (
         <div className={cx('video-container')}>
             {/* Dùng cho phiên bản lưu video ở máy chủ */}
-            {/* <video
-                className={classes}
-                ref={videoRef}
-                src={props.src}
-                loop
-                controls={props.controls}
-                // poster={props.poster ? props.poster : images.noImage}
-            /> */}
 
-            {
+            {!props.src.includes('https://drive.google.com') ? (
+                <video
+                    className={classes}
+                    ref={videoRef}
+                    src={`${process.env.REACT_APP_BASE_URL_AUTHEN}${props.src}`}
+                    loop
+                    controls={props.controls}
+                    // poster={props.poster ? props.poster : images.noImage}
+                />
+            ) : (
                 <iframe
                     className={classes}
                     ref={videoRef}
-                    src={props.src}
+                    src={`https://drive.google.com/file/d/${handleUrlIFrame(
+                        props.src
+                    )}/preview`}
                     width='100%'
                     height='100%'
 
                     // allow='autoplay'
                 ></iframe>
-            }
+            )}
         </div>
     );
 };

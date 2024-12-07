@@ -1,5 +1,6 @@
 import axios from '~/utils/customize-axios';
 
+//Api user
 const fetchAllUser = page => {
     return axios.get(`/api/User/GetUsers?page=${page}`);
 };
@@ -16,14 +17,6 @@ const DeleteUser = id => {
     return axios.delete(`/api/users/${id}`);
 };
 
-const LoginApi = (email, password) => {
-    return axios.post('/api/Account/SignIn', { email: email, password });
-};
-
-const GetVideos = () => {
-    return axios.get('/api/Videos');
-};
-
 const search = async (q, type = 'less') => {
     return axios.get('/api/User/Search', {
         params: {
@@ -33,6 +26,20 @@ const search = async (q, type = 'less') => {
     });
 };
 
+//api Login Register
+const LoginApi = (email, password) => {
+    return axios.post('/api/Account/SignIn', { email: email, password });
+};
+
+// api CRUD video
+
+const GetVideos = () => {
+    return axios.get('/api/Videos');
+};
+
+const DeleteVideos = id => {
+    return axios.delete(`/api/Videos/${id}`);
+};
 const Upload = async (formData, config) => {
     // Gửi yêu cầu POST với FormData
     const response = await axios.post('/api/Videos/upload', formData, config);
@@ -48,5 +55,6 @@ export {
     LoginApi,
     search,
     GetVideos,
-    Upload
+    Upload,
+    DeleteVideos
 };

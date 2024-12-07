@@ -1,0 +1,31 @@
+.add-new {
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sort-header {
+    color: red;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    i {
+        cursor: pointer;
+        padding: 0 2px;
+    }
+}
+
+.group-btn {
+    width: 300px;
+    display: flex;
+    justify-content: space-between;
+
+    i {
+        margin-right: 5px;
+    }
+}
+
+.customize-table {
+    width: inherit;
+    overflow-x: auto;
+}

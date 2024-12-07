@@ -10,7 +10,8 @@ const routes = {
     foryou: '/foryou',
     login: '/login',
     logout: '/logout',
-    register: '/register'
+    register: '/register',
+    managerVideo: '/managerVideo'
 };
 
 export default routes;

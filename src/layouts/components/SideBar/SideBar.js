@@ -84,6 +84,13 @@ function SideBar() {
                     activeIcon={<LiveActiveIcon />}
                 />
 
+                <MenuItem
+                    title='Quản lý video'
+                    to={config.routes.managerVideo}
+                    icon={<LiveIcon />}
+                    activeIcon={<LiveActiveIcon />}
+                />
+
                 {!currentUser ? (
                     <Button primary to={config.routes.login}>
                         Đăng nhập

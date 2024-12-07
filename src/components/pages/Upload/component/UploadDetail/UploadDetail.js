@@ -58,13 +58,12 @@ function UploadDetail() {
             };
 
             const response = await UploadApi(formData, config); // Gọi API upload
-            if (response) {
-                console.log('res sau khi upload :', response);
-                if (response && response.id) {
-                    toast.success('Upload thành công!');
-                } else {
-                    toast.error('lỗi khi tải file');
-                }
+
+            console.log('respnse uploaded : ', response);
+            if (response.statuscode === 200) {
+                toast.success('Upload thành công!');
+            } else {
+                toast.error('lỗi khi tải file');
             }
             // Xử lý kết quả sau khi upload thành công
             setIsUploading(false);

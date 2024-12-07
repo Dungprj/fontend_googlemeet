@@ -10,6 +10,7 @@ import Search from '~/components/pages/Search';
 import Live from '~/components/pages/Live';
 
 import TableUsers from '~/components/pages/TableUsers/TableUsers';
+import TableVideos from '~/components/pages/TableVideos/TableVideos';
 
 import config from '~/config';
 import Login from '~/components/pages/Login';
@@ -35,7 +36,8 @@ const publicRoutes = [
 ];
 
 const privateRoutes = [
-    { path: config.routes.managerUser, component: TableUsers }
+    { path: config.routes.managerUser, component: TableUsers },
+    { path: config.routes.managerVideo, component: TableVideos }
 ];
 
 export { publicRoutes, privateRoutes };

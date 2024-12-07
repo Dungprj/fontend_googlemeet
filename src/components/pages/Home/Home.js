@@ -21,10 +21,10 @@ function Home() {
     const handleGetVideo = async () => {
         let res = await GetVideos();
 
-        console.log('res ', res);
+        console.log('res get list video', res);
         if (res) {
-            setOffsetMax(res.length * OFFSET - OFFSET);
-            setVideos(res);
+            setOffsetMax(res.data.length * OFFSET - OFFSET);
+            setVideos(res.data);
         } else {
             toast.error('Get videos fail');
         }
@@ -134,8 +134,7 @@ function Home() {
                                 <Video
                                     className={cx('videoItem')}
                                     ref={el => (playersRef.current[index] = el)}
-                                    // src={`${process.env.REACT_APP_BASE_URL_AUTHEN}${item?.filePath}`}
-                                    src={`https://drive.google.com/file/d/${item?.fileId}/preview`}
+                                    src={item.filePath}
                                     title={item?.title}
                                     description={item?.description}
                                 />
