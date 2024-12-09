@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-import Cookies from 'js-cookie';
 import { constant } from 'lodash';
+import Cookies from 'js-cookie';
+
+import { Renewtoken } from '~/Services/UserService';
 
 const instance = axios.create({
     baseURL: process.env.REACT_APP_BASE_URL_AUTHEN,
@@ -40,29 +42,27 @@ instance.interceptors.response.use(
 
         if (err.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
-
             const token = Cookies.get('token');
 
             const refreshToken = Cookies.get('refreshToken');
 
-            if (!refreshToken) return Promise.reject(err);
+            if (!refreshToken || !token) return Promise.reject(err);
 
             try {
-                const res = await instance.post('/api/Account/Renewtoken', {
-                    accessToken: token,
-                    refreshToken: refreshToken
-                });
+                const res = await Renewtoken();
 
-                const { status, data } = await res;
+                if (res && res.success) {
+                    const { data } = await res;
 
-                const { accessToken, refreshToken } = data;
+                    const { accessToken, refreshToken } = data;
 
-                Cookies.set('token', accessToken);
-                Cookies.set('refreshToken', refreshToken);
+                    Cookies.set('token', accessToken);
+                    Cookies.set('refreshToken', refreshToken);
 
-                originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+                    originalRequest.headers.Authorization = `Bearer ${accessToken}`;
 
-                return instance(originalRequest);
+                    return instance(originalRequest);
+                }
             } catch (error) {
                 Cookies.remove('token');
                 Cookies.remove('refreshToken');

@@ -1,4 +1,5 @@
 import axios from '~/utils/customize-axios';
+import Cookies from 'js-cookie';
 
 //Api user
 const fetchAllUser = page => {
@@ -51,6 +52,19 @@ const Upload = async (formData, config) => {
     return response; // Trả về kết quả sau khi upload thành công
 };
 
+const Renewtoken = async () => {
+    const token = Cookies.get('token');
+
+    const refreshToken = Cookies.get('refreshToken');
+
+    const response = await axios.post('/api/Account/Renewtoken', {
+        accessToken: token,
+        refreshToken: refreshToken
+    });
+
+    return response;
+};
+
 export {
     fetchAllUser,
     postCreateUser,
@@ -61,5 +75,6 @@ export {
     GetVideos,
     Upload,
     DeleteVideos,
-    testAuthor
+    testAuthor,
+    Renewtoken
 };

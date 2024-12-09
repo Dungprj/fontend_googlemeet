@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import Video from '~/components/Video';
 import classNames from 'classnames/bind';
 import styles from './Home.module.scss';
-import { GetVideos, testAuthor } from '~/Services/UserService';
+import { GetVideos, testAuthor, Renewtoken } from '~/Services/UserService';
 import { toast } from 'react-toastify';
 
 const cx = classNames.bind(styles);
@@ -17,14 +17,21 @@ function Home() {
 
     const refListVideo = useRef();
     const viewportHeight = window.innerHeight; // Chiều cao của viewport
+    const MAX_FILE_SIZE = parseInt(process.env.REACT_APP_MAX_FILE_SIZE, 10);
+
+    const ref_BTNUP = useRef();
+    const ref_BTNDOWN = useRef();
 
     const OFFSET = viewportHeight;
     const handleGetVideo = async () => {
         let res = await GetVideos();
 
         if (res) {
-            setOffsetMax(res.data.length * OFFSET - OFFSET);
             setVideos(res.data);
+
+            const maxOFFSET = res.data.length * OFFSET - OFFSET;
+
+            setOffsetMax(maxOFFSET);
         } else {
             toast.error('Get videos fail');
         }
@@ -81,38 +88,45 @@ function Home() {
     const handleTouchEnd = () => {};
 
     const scrollUp = () => {
-        if (offset < 0) setOffset(prev => prev + OFFSET);
+        if (offset < 0) {
+            setOffset(prev => prev + OFFSET);
+        }
+        return;
     };
 
     const scrollDown = () => {
-        if (offset > -offsetMax) setOffset(prev => prev - OFFSET);
+        if (offset > -offsetMax) {
+            setOffset(prev => prev - OFFSET);
+        }
+        return;
     };
     // Lắng nghe sự kiện bàn phím
     const handleKeyDown = e => {
         e.preventDefault();
-        if (e.key === 'ArrowUp') {
-            scrollUp();
-        } else if (e.key === 'ArrowDown') {
-            scrollDown();
+
+        if (e.keyCode === 38) {
+            e.preventDefault();
+            ref_BTNUP.current.click();
+        } else if (e.keyCode === 40) {
+            e.preventDefault();
+
+            ref_BTNDOWN.current.click();
         }
-    };
-    const handleScroll = e => {
-        e.preventDefault();
     };
 
     useEffect(() => {
-        let res = testAuthor();
-
-        handleGetVideo();
         // Lắng nghe sự kiện bàn phím khi component mounted
         window.addEventListener('keydown', handleKeyDown);
-        window.addEventListener('scroll', handleScroll);
+        handleGetVideo();
+
+        console.log('gia tri offsetmax la ', offsetMax);
 
         // Cleanup khi component unmount
         return () => {
+            console.log('unmounting khi component');
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [offset, offsetMax]);
+    }, []);
 
     return (
         <div
@@ -120,6 +134,9 @@ function Home() {
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
+            onScroll={e => {
+                e.preventDefault();
+            }}
         >
             <div className={cx('wrap-video')}>
                 <div
@@ -130,6 +147,17 @@ function Home() {
                         transition: 'transform 0.3s ease'
                     }}
                 >
+                    <iframe
+                        className={cx('video-wrap-player')}
+                        width='560'
+                        height='315'
+                        src='https://www.youtube.com/embed/DuNhD41DDvw?si=0EsjwoKkRCuzBMJk'
+                        title='YouTube video player'
+                        frameborder='0'
+                        allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+                        referrerpolicy='strict-origin-when-cross-origin'
+                        allowfullscreen
+                    ></iframe>
                     {videos.map((item, index) => (
                         <div key={item.id} onClick={() => handleVideo(index)}>
                             <div className={cx('video-wrap-player')}>
@@ -148,10 +176,18 @@ function Home() {
 
             {/* Nút lướt lên và xuống */}
             <div className={cx('scroll-buttons')}>
-                <button className={cx('scroll-up')} onClick={scrollUp}>
+                <button
+                    ref={ref_BTNUP}
+                    className={cx('scroll-up')}
+                    onClick={scrollUp}
+                >
                     ↑
                 </button>
-                <button className={cx('scroll-down')} onClick={scrollDown}>
+                <button
+                    ref={ref_BTNDOWN}
+                    className={cx('scroll-down')}
+                    onClick={scrollDown}
+                >
                     ↓
                 </button>
             </div>

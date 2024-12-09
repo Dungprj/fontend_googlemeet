@@ -27,6 +27,8 @@ function UploadDetail() {
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
 
+    const MAX_FILE_SIZE = parseInt(process.env.REACT_APP_MAX_FILE_SIZE, 10);
+
     const handleUpload = async () => {
         if (!file) {
             toast.error('Please select a video file first!');
@@ -96,27 +98,35 @@ function UploadDetail() {
         const context = canvas.getContext('2d');
         const reader = new FileReader();
 
-        const generateThumbnail = videoFile => {
-            reader.onload = () => {
-                video.src = reader.result;
-                video.onloadeddata = () => {
-                    video.currentTime = 2;
-                };
+        // const generateThumbnail = videoFile => {
+        //     reader.onload = () => {
+        //         video.src = reader.result;
+        //         video.onloadeddata = () => {
+        //             video.currentTime = 2;
+        //         };
 
-                video.onseeked = () => {
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        //         video.onseeked = () => {
+        //             canvas.width = video.videoWidth;
+        //             canvas.height = video.videoHeight;
+        //             context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-                    const dataUrl = canvas.toDataURL('image/jpeg');
-                    setThumbnail(dataUrl); // Lưu thumbnail vào state
-                };
-            };
-            reader.readAsDataURL(videoFile);
-        };
+        //             const dataUrl = canvas.toDataURL('image/jpeg');
+        //             setThumbnail(dataUrl); // Lưu thumbnail vào state
+        //         };
+        //     };
+        //     reader.readAsDataURL(videoFile);
+        // };
 
         if (file) {
-            generateThumbnail(file);
+            // generateThumbnail(file);
+
+            //kiểm tra xem có vượt quá kích thước cho phép ko
+            // Kiểm tra kích thước file
+            if (file.size > MAX_FILE_SIZE) {
+                const size_mb = MAX_FILE_SIZE / 1024 / 1024;
+                toast.error(`File size exceeds the ${size_mb}MB limit!`);
+                return;
+            }
 
             // Kiểm tra xem file có phải là video .mp4 không
             if (file.type === 'video/mp4') {
@@ -138,6 +148,7 @@ function UploadDetail() {
             } else {
             }
         } else {
+            toast.error(`Please choosen File `);
         }
     }, [file]);
 

@@ -21,9 +21,8 @@
     justify-content: center;
     background-color: black;
     height: var(--default-height-video);
-    width: var(--default-min-width-video);
+    min-width: var(--default-min-width-video);
     border-radius: 10px;
-    overflow: hidden;
 }
 
 .videoItem {

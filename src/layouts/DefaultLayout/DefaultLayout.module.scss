@@ -10,11 +10,19 @@
     max-width: 100%;
     padding: 0 var(--default-layout-horizontal-spacer);
     display: flex;
+    height: 100vh; /* Chiều cao của toàn trang */
+    overflow: hidden; /* Ngăn chặn việc cuộn của toàn bộ trang */
     // margin-top: var(--default-layout-header-height);
 }
 
+.sidebar {
+    height: 100vh;
+    overflow: hidden; /* Sidebar sẽ không cuộn */
+    position: fixed; /* Đặt sidebar cố định */
+}
 .content {
     flex: 1;
+    overflow-y: auto;
 }
 
 // Media Query để ẩn Sidebar trên thiết bị di động
