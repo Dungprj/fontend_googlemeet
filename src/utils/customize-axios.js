@@ -1,41 +1,75 @@
 import axios from 'axios';
 
+import Cookies from 'js-cookie';
+import { constant } from 'lodash';
+
 const instance = axios.create({
     baseURL: process.env.REACT_APP_BASE_URL_AUTHEN,
     timeout: 10000
 });
+
+instance.interceptors.request.use(
+    async config => {
+        // Cookies.set('token', accessToken);
+        // Cookies.set('refreshToken', refreshToken);
+
+        const token = Cookies.get('token');
+
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+
+        return config;
+    },
+    err => {
+        return Promise.reject(err);
+    }
+);
 
 // Add a response interceptor
 instance.interceptors.response.use(
     function (response) {
         // Any status code that lie within the range of 2xx cause this function to trigger
         // Do something with response data
-        console.log(response);
         return response && response.data && response.data.data
             ? response.data
             : { data: response.data, statuscode: response.status };
     },
-    function (error) {
-        let res = {};
-        if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
+    async err => {
+        const originalRequest = err.config;
 
-            res.data = error.response.data;
-            res.status = error.response.status;
-            res.headers = error.response.headers;
-        } else if (error.request) {
-            // The request was made but no response was received
-            // `error.request` is an instance of XMLHttpRequest in the browser
-            // and an instance of http.ClientRequest in node.js
-            console.log(error.request);
-        } else {
-            // Something happened in setting up the request that triggered an Error
-            console.log('Error', error.message);
+        if (err.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+
+            const token = Cookies.get('token');
+
+            const refreshToken = Cookies.get('refreshToken');
+
+            if (!refreshToken) return Promise.reject(err);
+
+            try {
+                const res = await instance.post('/api/Account/Renewtoken', {
+                    accessToken: token,
+                    refreshToken: refreshToken
+                });
+
+                const { status, data } = await res;
+
+                const { accessToken, refreshToken } = data;
+
+                Cookies.set('token', accessToken);
+                Cookies.set('refreshToken', refreshToken);
+
+                originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+
+                return instance(originalRequest);
+            } catch (error) {
+                Cookies.remove('token');
+                Cookies.remove('refreshToken');
+
+                return Promise.reject(error);
+            }
         }
-
-        return res;
-        // return Promise.reject(error);
     }
 );
 

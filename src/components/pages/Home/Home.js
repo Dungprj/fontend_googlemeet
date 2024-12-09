@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import Video from '~/components/Video';
 import classNames from 'classnames/bind';
 import styles from './Home.module.scss';
-import { GetVideos } from '~/Services/UserService';
+import { GetVideos, testAuthor } from '~/Services/UserService';
 import { toast } from 'react-toastify';
 
 const cx = classNames.bind(styles);
@@ -16,12 +16,12 @@ function Home() {
     const [offsetMax, setOffsetMax] = useState(0);
 
     const refListVideo = useRef();
+    const viewportHeight = window.innerHeight; // Chiều cao của viewport
 
-    const OFFSET = 780;
+    const OFFSET = viewportHeight;
     const handleGetVideo = async () => {
         let res = await GetVideos();
 
-        console.log('res get list video', res);
         if (res) {
             setOffsetMax(res.data.length * OFFSET - OFFSET);
             setVideos(res.data);
@@ -101,6 +101,8 @@ function Home() {
     };
 
     useEffect(() => {
+        let res = testAuthor();
+
         handleGetVideo();
         // Lắng nghe sự kiện bàn phím khi component mounted
         window.addEventListener('keydown', handleKeyDown);
@@ -134,7 +136,7 @@ function Home() {
                                 <Video
                                     className={cx('videoItem')}
                                     ref={el => (playersRef.current[index] = el)}
-                                    src={item.filePath}
+                                    src={`${process.env.REACT_APP_BASE_URL_AUTHEN}${item.filePath}`}
                                     title={item?.title}
                                     description={item?.description}
                                 />

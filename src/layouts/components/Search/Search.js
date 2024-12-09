@@ -39,7 +39,6 @@ function Search() {
 
             const result = await search(debouncedValue);
 
-            console.log('ket qua tim kiem', result.data);
             setSearchResult(result.data);
 
             setLoading(false);

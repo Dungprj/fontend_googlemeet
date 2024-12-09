@@ -35,14 +35,11 @@ function Upload() {
 
     // Hàm xử lý khi kéo file vào vùng drop
     const handleDragOver = e => {
-        console.log('vao day');
         e.preventDefault(); // Ngăn chặn hành động mặc định (để cho phép thả file)
     };
 
     useEffect(() => {
-        console.log(file);
         if (file) {
-            console.log('dang dieu huong den ', config.routes.uploaddetail);
             navigate(config.routes.uploaddetail, {
                 state: {
                     file: file

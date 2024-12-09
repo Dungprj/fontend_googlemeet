@@ -31,7 +31,6 @@ const Video = (props, ref) => {
     const handleUrlIFrame = src => {
         let srcSplit = src.split('id=');
 
-        console.log('sau xu ly', srcSplit);
         return srcSplit[1];
     };
 
@@ -39,16 +38,8 @@ const Video = (props, ref) => {
         <div className={cx('video-container')}>
             {/* Dùng cho phiên bản lưu video ở máy chủ */}
 
-            {!props.src.includes('https://drive.google.com') ? (
-                <video
-                    className={classes}
-                    ref={videoRef}
-                    src={`${process.env.REACT_APP_BASE_URL_AUTHEN}${props.src}`}
-                    loop
-                    controls={props.controls}
-                    // poster={props.poster ? props.poster : images.noImage}
-                />
-            ) : (
+            {typeof props.src === 'string' &&
+            props.src.includes('https://drive.google.com') ? (
                 <iframe
                     className={classes}
                     ref={videoRef}
@@ -60,6 +51,15 @@ const Video = (props, ref) => {
 
                     // allow='autoplay'
                 ></iframe>
+            ) : (
+                <video
+                    className={classes}
+                    ref={videoRef}
+                    src={`${props.src}`}
+                    loop
+                    controls={props.controls}
+                    // poster={props.poster ? props.poster : images.noImage}
+                />
             )}
         </div>
     );

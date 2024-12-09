@@ -31,8 +31,6 @@ function TableVideos(props) {
 
     const { user } = useContext(UserContext);
 
-    console.log('uc', user);
-
     //modal
 
     const [isShowModalAddNew, setIsShowModalAddNew] = useState(false);
@@ -62,27 +60,19 @@ function TableVideos(props) {
     const GetListVideos = async () => {
         let res = await GetVideos();
 
-        console.log('videos ', res);
-
         if (res) {
             setListVideos(res.data);
-
-            console.log('listVideos ', res.data);
         }
     };
 
     const handleDelete = async id => {
         let res = await DeleteVideos(id);
 
-        console.log('responese deleteVideos', res);
-
         if (res && res.statuscode === 200) {
-            console.log('vao day');
             let listVideoClone = [...listVideo];
 
             let result = listVideoClone.filter(video => video.id !== id);
 
-            console.log('list sau khi delelte ', result);
             setListVideos(result);
             toast.success(res.data);
 

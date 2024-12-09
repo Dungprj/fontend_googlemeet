@@ -29,8 +29,6 @@ function TableUsers(props) {
 
     const { user } = useContext(UserContext);
 
-    console.log('uc', user);
-
     //modal
 
     const [isShowModalAddNew, setIsShowModalAddNew] = useState(false);
@@ -169,17 +167,12 @@ function TableUsers(props) {
         let cloneListUsers = [...listUsersTmp];
 
         if (debouncedValue) {
-            console.log('loc : ', debouncedValue);
-            console.log('trong ', cloneListUsers);
-
             const cloneListUsersfilter = cloneListUsers.filter(item =>
                 item.email.startsWith(debouncedValue)
             );
 
-            console.log(cloneListUsersfilter);
             setListUsers(cloneListUsersfilter);
         } else {
-            console.log('chua nhap');
             setListUsers(listUsersTmp);
         }
 
@@ -199,7 +192,7 @@ function TableUsers(props) {
             Papa.parse(file, {
                 complete: function (results) {
                     let rawCSV = results.data;
-                    console.log(results);
+
                     if (rawCSV.length > 0) {
                         if (rawCSV[0] && rawCSV[0].length === 3) {
                             if (
@@ -226,8 +219,6 @@ function TableUsers(props) {
                                 );
 
                                 setListUsers(dataUploadHandled);
-
-                                console.log('data upload', dataUploadHandled);
                             } else {
                                 toast.error('Wrong format column for CSV file');
                             }

@@ -3,7 +3,7 @@ import styles from './Login.module.scss';
 import Button from '~/components/Button';
 import { useEffect, useState } from 'react';
 
-import { LoginApi } from '~/Services/UserService';
+import { LoginApi, testAuthor } from '~/Services/UserService';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import config from '~/config';
@@ -11,6 +11,8 @@ import { UserContext } from '~/Context/UserContext';
 import React from 'react';
 
 import { Link } from 'react-router-dom';
+
+import Cookies from 'js-cookie';
 
 const cx = classNames.bind(styles);
 function Login() {
@@ -43,9 +45,13 @@ function Login() {
 
         setLoading(true);
 
-        console.log(res.data.accessToken);
+        if (res && res.status === 200) {
+            let userId = res.data.userId;
+            const { accessToken, refreshToken } = res.data.token;
 
-        if (res && res.data.accessToken) {
+            Cookies.set('token', accessToken);
+            Cookies.set('refreshToken', refreshToken);
+
             loginContext(email.trim(), res.data.accessToken);
 
             setTimeout(() => {

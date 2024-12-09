@@ -16,7 +16,6 @@ function ModalEditUser(props) {
     const [job, setJob] = useState('');
 
     const handleEditUser = async () => {
-        console.log(dataUserEdit);
         let res = await putUpdateUser(dataUserEdit.id, lastName, job);
 
         if (res && res.updatedAt) {

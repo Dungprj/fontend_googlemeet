@@ -28,7 +28,6 @@ function UploadDetail() {
     const [uploadProgress, setUploadProgress] = useState(0);
 
     const handleUpload = async () => {
-        console.log('Uploading...', file);
         if (!file) {
             toast.error('Please select a video file first!');
 
@@ -59,7 +58,6 @@ function UploadDetail() {
 
             const response = await UploadApi(formData, config); // Gọi API upload
 
-            console.log('respnse uploaded : ', response);
             if (response.statuscode === 200) {
                 toast.success('Upload thành công!');
             } else {
@@ -118,18 +116,17 @@ function UploadDetail() {
         };
 
         if (file) {
-            console.log('Nhận được file:', file);
             generateThumbnail(file);
 
             // Kiểm tra xem file có phải là video .mp4 không
             if (file.type === 'video/mp4') {
                 // Tạo URL tạm thời cho video từ file
                 const videoURL = URL.createObjectURL(file);
+
                 setVideoSrc(videoURL);
 
                 return () => {
                     URL.revokeObjectURL(videoURL); // Giải phóng URL tạm thời
-                    console.log('Đã hủy URL video');
 
                     // Cleanup: Hủy các tài nguyên khi component unmount hoặc khi file thay đổi
 
@@ -137,13 +134,10 @@ function UploadDetail() {
                     reader.abort(); // Dừng việc đọc file
                     canvas.width = 0; // Giải phóng canvas
                     canvas.height = 0;
-                    console.log('Đã giải phóng tài nguyên video và canvas');
                 };
             } else {
-                console.log('File không phải là video .mp4');
             }
         } else {
-            console.log('Không nhận được file');
         }
     }, [file]);
 

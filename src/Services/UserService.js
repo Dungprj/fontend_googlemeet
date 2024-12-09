@@ -26,6 +26,10 @@ const search = async (q, type = 'less') => {
     });
 };
 
+const testAuthor = () => {
+    return axios.get('/api/Test/TestAuthor');
+};
+
 //api Login Register
 const LoginApi = (email, password) => {
     return axios.post('/api/Account/SignIn', { email: email, password });
@@ -56,5 +60,6 @@ export {
     search,
     GetVideos,
     Upload,
-    DeleteVideos
+    DeleteVideos,
+    testAuthor
 };

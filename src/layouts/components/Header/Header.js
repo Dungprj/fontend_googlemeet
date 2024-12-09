@@ -65,10 +65,8 @@ function Header() {
     const { user } = React.useContext(UserContext);
     const currentUser = user && user.auth;
 
-    console.log('trang thai', currentUser);
     //handle logic
     const handleMenuChange = menuItem => {
-        console.log(menuItem);
         switch (menuItem.type) {
             case 'language':
                 // handle language change
