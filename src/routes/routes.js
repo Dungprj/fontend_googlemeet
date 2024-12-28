@@ -17,6 +17,7 @@ import Login from '~/components/pages/Login';
 
 import register from '~/components/pages/Register';
 import UploadDetail from '~/components/pages/Upload/component/UploadDetail/UploadDetail';
+import GPT from '~/components/pages/Gpt';
 
 //Pulic routes
 const publicRoutes = [
@@ -37,7 +38,8 @@ const publicRoutes = [
 
 const privateRoutes = [
     { path: config.routes.managerUser, component: TableUsers },
-    { path: config.routes.managerVideo, component: TableVideos }
+    { path: config.routes.managerVideo, component: TableVideos },
+    { path: config.routes.gpt, component: GPT }
 ];
 
 export { publicRoutes, privateRoutes };

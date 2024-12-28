@@ -2,7 +2,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import Video from '~/components/Video';
 import classNames from 'classnames/bind';
 import styles from './Home.module.scss';
-import { GetVideos, testAuthor, Renewtoken } from '~/Services/UserService';
+import {
+    GetVideos,
+    testAuthor,
+    Renewtoken,
+    getDataFile
+} from '~/Services/UserService';
 import { toast } from 'react-toastify';
 
 const cx = classNames.bind(styles);
@@ -100,6 +105,11 @@ function Home() {
         }
         return;
     };
+
+    const handleGetDataFile = async () => {
+        const res = await getDataFile();
+        console.log('res get file : ', res);
+    };
     // Lắng nghe sự kiện bàn phím
     const handleKeyDown = e => {
         e.preventDefault();
@@ -139,6 +149,7 @@ function Home() {
             }}
         >
             <div className={cx('wrap-video')}>
+                <button onClick={handleGetDataFile}>Get data</button>
                 <div
                     ref={refListVideo}
                     className={cx('video-list')}

@@ -13,7 +13,8 @@ import {
     UserGroupActiveIcon,
     LiveActiveIcon,
     Logo,
-    UploadIcon
+    UploadIcon,
+    GPTIcon
 } from '~/components/Icons';
 import SuggestedAcoutnts from '~/components/SuggestedAcoutnts';
 import Search from '~/layouts/components/Search/Search';
@@ -76,7 +77,12 @@ function SideBar() {
                     icon={<UploadIcon />}
                     activeIcon={<UploadIcon />}
                 />
-
+                <MenuItem
+                    title='GPT'
+                    to={config.routes.gpt}
+                    icon={<GPTIcon />}
+                    activeIcon={<GPTIcon />}
+                />
                 <MenuItem
                     title='Quản lý user'
                     to={config.routes.managerUser}

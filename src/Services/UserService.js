@@ -27,6 +27,10 @@ const search = async (q, type = 'less') => {
     });
 };
 
+const getDataFile = () => {
+    return axios.get(`/api/GoogleDocs/read`);
+};
+
 const testAuthor = () => {
     return axios.get('/api/Test/TestAuthor');
 };
@@ -76,5 +80,6 @@ export {
     Upload,
     DeleteVideos,
     testAuthor,
-    Renewtoken
+    Renewtoken,
+    getDataFile
 };
