@@ -106,10 +106,6 @@ function Home() {
         return;
     };
 
-    const handleGetDataFile = async () => {
-        const res = await getDataFile();
-        console.log('res get file : ', res);
-    };
     // Lắng nghe sự kiện bàn phím
     const handleKeyDown = e => {
         e.preventDefault();
@@ -149,7 +145,6 @@ function Home() {
             }}
         >
             <div className={cx('wrap-video')}>
-                <button onClick={handleGetDataFile}>Get data</button>
                 <div
                     ref={refListVideo}
                     className={cx('video-list')}
