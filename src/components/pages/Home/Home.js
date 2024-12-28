@@ -125,11 +125,8 @@ function Home() {
         window.addEventListener('keydown', handleKeyDown);
         handleGetVideo();
 
-        console.log('gia tri offsetmax la ', offsetMax);
-
         // Cleanup khi component unmount
         return () => {
-            console.log('unmounting khi component');
             window.removeEventListener('keydown', handleKeyDown);
         };
     }, []);

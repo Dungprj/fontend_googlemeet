@@ -47,10 +47,13 @@ function Login() {
 
         if (res && res.status === 200) {
             let userId = res.data.userId;
+            let roles = res.data.roles;
+
             const { accessToken, refreshToken } = res.data.token;
 
             Cookies.set('token', accessToken);
             Cookies.set('refreshToken', refreshToken);
+            Cookies.set('roles', JSON.stringify(roles));
 
             loginContext(email.trim(), res.data.accessToken);
 
@@ -58,13 +61,13 @@ function Login() {
                 setLoading(false);
                 toast.success('Login successful');
                 navigate(config.routes.home);
-            }, 2000);
+            }, 100);
         } else {
-            if (res && res.status === 400) {
+            if (res && res.data.status === 400) {
                 setTimeout(() => {
                     setLoading(false);
-                    toast.error(res.data.error);
-                }, 2000);
+                    toast.error(res.data.message);
+                }, 100);
             }
         }
     };

@@ -4,7 +4,8 @@ import config from '~/config';
 
 import Menu, { MenuItem } from './Menu';
 import Button from '~/components/Button';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 import {
     HomeIcon,
     UserGroupIcon,
@@ -28,7 +29,18 @@ function SideBar() {
     const { user, logout } = React.useContext(UserContext);
     const currentUser = user && user.auth;
 
+    const [roles, setRoles] = useState([]);
+
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (Cookies.get('roles') && Cookies.get('roles') !== undefined) {
+            let roles_list = JSON.parse(Cookies.get('roles'));
+
+            setRoles(roles_list);
+        } else {
+        }
+    }, []);
 
     const handleLogout = () => {
         const tokenCurrent = localStorage.getItem('token');
@@ -83,19 +95,22 @@ function SideBar() {
                     icon={<GPTIcon />}
                     activeIcon={<GPTIcon />}
                 />
-                <MenuItem
-                    title='Quản lý user'
-                    to={config.routes.managerUser}
-                    icon={<LiveIcon />}
-                    activeIcon={<LiveActiveIcon />}
-                />
-
-                <MenuItem
-                    title='Quản lý video'
-                    to={config.routes.managerVideo}
-                    icon={<LiveIcon />}
-                    activeIcon={<LiveActiveIcon />}
-                />
+                {roles.includes('f056236f-2444-48a2-bcb8-7ca47e009744') && (
+                    <>
+                        <MenuItem
+                            title='Quản lý user'
+                            to={config.routes.managerUser}
+                            icon={<LiveIcon />}
+                            activeIcon={<LiveActiveIcon />}
+                        />
+                        <MenuItem
+                            title='Quản lý video'
+                            to={config.routes.managerVideo}
+                            icon={<LiveIcon />}
+                            activeIcon={<LiveActiveIcon />}
+                        />
+                    </>
+                )}
 
                 {!currentUser ? (
                     <Button primary to={config.routes.login}>

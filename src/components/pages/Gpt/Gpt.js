@@ -9,7 +9,6 @@ function GPT() {
         const fetchData = async () => {
             try {
                 const res = await getDataFile(); // Gọi API để lấy nội dung text
-                console.log('API Response:', res);
 
                 // Kiểm tra dữ liệu trả về
                 if (!res || !res.data) {

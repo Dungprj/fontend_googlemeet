@@ -66,6 +66,7 @@ instance.interceptors.response.use(
             } catch (error) {
                 Cookies.remove('token');
                 Cookies.remove('refreshToken');
+                Cookies.remove('roles');
 
                 return Promise.reject(error);
             }
