@@ -95,6 +95,19 @@ function SideBar() {
                     icon={<GPTIcon />}
                     activeIcon={<GPTIcon />}
                 />
+                <MenuItem
+                    title='API Checker'
+                    to={config.routes.check}
+                    icon={<GPTIcon />}
+                    activeIcon={<GPTIcon />}
+                />
+
+                <MenuItem
+                    title='Call'
+                    to={config.routes.call}
+                    icon={<GPTIcon />}
+                    activeIcon={<GPTIcon />}
+                />
                 {roles.includes('f056236f-2444-48a2-bcb8-7ca47e009744') && (
                     <>
                         <MenuItem

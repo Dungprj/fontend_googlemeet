@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import styles from './UploadDetail.module.scss';
+
 import { useLocation } from 'react-router-dom';
 
 import Image from '~/components/Image';
@@ -11,7 +11,7 @@ import userEvent from '@testing-library/user-event';
 
 import { toast } from 'react-toastify';
 import { Upload as UploadApi } from '~/Services/UserService';
-
+import styles from './UploadDetail.module.scss';
 const cx = classNames.bind(styles);
 function UploadDetail() {
     const location = useLocation();
@@ -50,11 +50,12 @@ function UploadDetail() {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 },
+                timeout: 3600000, // 1 giờ (3600000ms) để xử lý các file lớn
                 onUploadProgress: progressEvent => {
                     const progress = Math.round(
                         (progressEvent.loaded / progressEvent.total) * 100
                     );
-                    setUploadProgress(progress); // Cập nhật tiến trình với độ trễ
+                    setUploadProgress(progress); // Cập nhật tiến trình upload
                 }
             };
 
@@ -70,7 +71,13 @@ function UploadDetail() {
             setUploadProgress(100);
         } catch (err) {
             console.error('Error during upload:', err);
-            toast.error('Upload failed. Please try again.');
+
+            // Xử lý lỗi cụ thể khi bị timeout hoặc lỗi mạng
+            if (err.code === 'ECONNABORTED') {
+                toast.error('Request timeout. Please try again.');
+            } else {
+                toast.error('Upload failed. Please try again.');
+            }
             setIsUploading(false);
         }
     };

@@ -1,0 +1,25 @@
+.peer-id {
+    font-weight: bold;
+    margin-bottom: 10px;
+    background-color: red;
+    color: red;
+}
+
+.videoContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 10px;
+}
+
+.video {
+    width: 30%;
+    max-width: 300px;
+    height: auto;
+    border: 2px solid #000;
+    border-radius: 8px;
+}
+
+.controls {
+    margin-top: 20px;
+}

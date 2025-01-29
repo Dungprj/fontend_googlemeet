@@ -18,6 +18,8 @@ import Login from '~/components/pages/Login';
 import register from '~/components/pages/Register';
 import UploadDetail from '~/components/pages/Upload/component/UploadDetail/UploadDetail';
 import GPT from '~/components/pages/Gpt';
+import ApiChecker from '~/components/pages/ApiChecker';
+import VideoCall from '~/components/pages/VideoCall';
 
 //Pulic routes
 const publicRoutes = [
@@ -33,7 +35,9 @@ const publicRoutes = [
     { path: config.routes.login, component: Login, layout: HeaderOnly },
 
     { path: config.routes.register, component: register, layout: HeaderOnly },
-    { path: config.routes.foryou, component: Home }
+    { path: config.routes.foryou, component: Home },
+    { path: config.routes.check, component: ApiChecker },
+    { path: config.routes.call, component: VideoCall }
 ];
 
 const privateRoutes = [

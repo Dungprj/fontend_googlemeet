@@ -12,7 +12,9 @@ const routes = {
     logout: '/logout',
     register: '/register',
     managerVideo: '/managerVideo',
-    gpt: '/gpt'
+    gpt: '/gpt',
+    check: '/check',
+    call: '/call'
 };
 
 export default routes;
