@@ -19,6 +19,33 @@ const VideoCall = () => {
     const videoRefs = useRef([]);
     const videoContainerRef = useRef(null); // useRef để quản lý container video
 
+    //kiểm tra băng thông
+    const checkXirsysBandwidth = async () => {
+        try {
+            const response = await fetch('https://global.xirsys.net/stat', {
+                method: 'GET',
+                headers: {
+                    Authorization:
+                        'Basic ' +
+                        btoa('Dungak47:b8163796-e0a5-11ef-9dd3-0242ac130002'),
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok)
+                throw new Error(
+                    '❌ Không thể lấy thông tin băng thông từ Xirsys'
+                );
+
+            const data = await response.json();
+            console.log('✅ Dữ liệu băng thông Xirsys:', data);
+            return data; // Trả về thông tin băng thông
+        } catch (error) {
+            console.error('⚠️ Lỗi khi kiểm tra băng thông:', error);
+            return null; // Trả về null nếu thất bại
+        }
+    };
+
     //lấy danh sách iceserver từ api
     const getIceServersFromXirsys = async () => {
         try {
@@ -42,6 +69,18 @@ const VideoCall = () => {
 
             const data = await response.json();
             console.log('✅ ICE Servers nhận từ Xirsys:', data.v.iceServers);
+            checkXirsysBandwidth().then(data => {
+                if (data) {
+                    console.log(
+                        `📊 Tổng băng thông đã sử dụng: ${data.v.bytesUsed} bytes`
+                    );
+                    console.log(
+                        `📉 Băng thông còn lại: ${data.v.bytesRemaining} bytes`
+                    );
+                } else {
+                    console.log('⚠️ Không thể lấy dữ liệu băng thông.');
+                }
+            });
             return data.v.iceServers; // Trả về danh sách ICE servers
         } catch (error) {
             console.error('⚠️ Không thể lấy ICE servers:', error);
