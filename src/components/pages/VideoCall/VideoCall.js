@@ -1,181 +1,256 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Peer from 'peerjs';
+import createSignalRConnection from '../../../Services/signalRService';
 import classNames from 'classnames/bind';
 import styles from './VideoCall.module.scss';
+import * as signalR from '@microsoft/signalr';
 
 const cx = classNames.bind(styles);
 
 const VideoCall = () => {
     const [peerId, setPeerId] = useState('');
-    const [remotePeerId, setRemotePeerId] = useState('');
-    const [peers, setPeers] = useState({});
-    const [remoteVideos, setRemoteVideos] = useState({});
-    const localVideoRef = useRef(null);
+    const [remotePeers, setRemotePeers] = useState([]); // Danh sách người đã kết nối
+    const [callParticipants, setCallParticipants] = useState([]); // Danh sách người trong cuộc gọi
+    const [meetingId, setMeetingId] = useState(''); // ID cuộc họp
+    const [meetings, setMeetings] = useState([]); // Danh sách các cuộc họp
     const peerRef = useRef(null);
+    const signalRRef = useRef(null);
     const localStreamRef = useRef(null);
+    const videoRefs = useRef([]);
 
     useEffect(() => {
-        const peer = new Peer();
-        peerRef.current = peer;
+        let peer = null;
 
-        // Khi PeerJS sẵn sàng
-        peer.on('open', async id => {
-            console.log('My Peer ID:', id);
-            setPeerId(id);
+        const handleReceiveConnectionId = async connectionId => {
+            console.log(
+                `🔗 Nhận SignalR ID, sử dụng làm Peer ID: ${connectionId}`
+            );
+            setPeerId(connectionId);
 
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: true,
-                    audio: true
-                });
-                localStreamRef.current = stream;
-                if (localVideoRef.current) {
-                    localVideoRef.current.srcObject = stream;
-                }
-            } catch (error) {
-                console.error('Không thể truy cập camera/micro:', error);
-            }
-        });
+            peer = new Peer(connectionId);
+            peerRef.current = peer;
 
-        // Khi nhận cuộc gọi
-        peer.on('call', async call => {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: true,
-                    audio: true
-                });
-                localStreamRef.current = stream;
-                if (localVideoRef.current) {
-                    localVideoRef.current.srcObject = stream;
-                }
-                call.answer(stream);
+            peer.on('open', async id => {
+                console.log(`✅ PeerJS đã khởi tạo với ID: ${id}`);
+            });
 
+            peer.on('call', call => {
+                call.answer(localStreamRef.current);
                 call.on('stream', remoteStream => {
-                    addRemoteVideo(call.peer, remoteStream);
+                    addVideo(call.peer, remoteStream);
                 });
+            });
 
-                call.on('close', () => {
-                    removeRemoteVideo(call.peer);
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true
                 });
+                localStreamRef.current = stream;
+                addVideo('you', stream, true);
             } catch (error) {
-                console.error('Lỗi khi nhận cuộc gọi:', error);
+                console.error('❌ Không thể truy cập camera/mic:', error);
             }
-        });
+        };
 
-        // Cleanup khi component unmount
+        const handleUpdateUserList = userList => {
+            console.log(
+                '📌 Danh sách toàn bộ thành viên đã kết nối:',
+                userList
+            );
+            setRemotePeers(userList);
+        };
+
+        const handleUpdateMeetingList = meetingList => {
+            console.log('📅 Danh sách cuộc họp:', meetingList);
+            setMeetings(meetingList);
+        };
+
+        const handleUpdateMeetingParticipants = (meetingId, participants) => {
+            console.log(
+                `📞 Danh sách người trong cuộc họp ${meetingId}:`,
+                participants
+            );
+            setCallParticipants(participants);
+
+            // Khi danh sách cập nhật, gọi video đến tất cả thành viên mới
+            participants.forEach(participant => {
+                if (
+                    participant !== peerId &&
+                    !videoRefs.current.some(video => video.id === participant)
+                ) {
+                    makeCall(peerRef.current, participant);
+                }
+            });
+        };
+
+        signalRRef.current = createSignalRConnection(
+            handleReceiveConnectionId,
+            handleUpdateUserList,
+            handleUpdateMeetingList,
+            handleUpdateMeetingParticipants
+        );
+
         return () => {
-            if (peerRef.current) {
-                peerRef.current.destroy();
-            }
-            if (localStreamRef.current) {
-                localStreamRef.current
-                    .getTracks()
-                    .forEach(track => track.stop());
-            }
+            if (peerRef.current) peerRef.current.destroy();
+            if (signalRRef.current) signalRRef.current.stop();
         };
     }, []);
 
-    const makeCall = async () => {
-        if (!remotePeerId.trim()) {
-            alert('Nhập Peer ID để gọi');
+    // Tạo cuộc họp mới
+    const createMeeting = () => {
+        if (meetingId.trim() === '') {
+            console.warn('⚠️ Vui lòng nhập ID cuộc họp.');
             return;
         }
 
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: true,
-                audio: true
-            });
-            localStreamRef.current = stream;
-            if (localVideoRef.current) {
-                localVideoRef.current.srcObject = stream;
-            }
+        signalRRef.current
+            .invoke('CreateMeeting', meetingId)
+            .then(() => console.log(`📅 Đã tạo cuộc họp ${meetingId}`))
+            .catch(err => console.error('⚠️ Không thể tạo cuộc họp:', err));
+    };
 
-            const call = peerRef.current.call(remotePeerId, stream);
-            call.on('stream', remoteStream => {
-                addRemoteVideo(call.peer, remoteStream);
-            });
-
-            call.on('close', () => {
-                removeRemoteVideo(call.peer);
-            });
-
-            setPeers(prev => ({ ...prev, [call.peer]: call }));
-        } catch (error) {
-            console.error('Không thể thực hiện cuộc gọi:', error);
+    // Tham gia cuộc họp với ID cụ thể
+    const joinMeeting = () => {
+        if (meetingId.trim() === '') {
+            console.warn('⚠️ Vui lòng nhập ID cuộc họp.');
+            return;
         }
+
+        signalRRef.current
+            .invoke('JoinMeeting', meetingId)
+            .then(() => console.log(`✅ Đã tham gia cuộc họp ${meetingId}`))
+            .catch(err =>
+                console.error('⚠️ Không thể tham gia cuộc họp:', err)
+            );
     };
 
-    const addRemoteVideo = (peerId, stream) => {
-        setRemoteVideos(prev => {
-            if (prev[peerId]) return prev; // Nếu video đã tồn tại, không thêm nữa
+    // Rời cuộc họp hiện tại (Sửa lỗi)
+    const leaveMeeting = () => {
+        if (meetingId.trim() === '') {
+            console.warn('⚠️ Vui lòng nhập ID cuộc họp để rời.');
+            return;
+        }
 
-            const newVideos = { ...prev, [peerId]: stream };
-            return newVideos;
+        signalRRef.current
+            .invoke('LeaveMeeting', meetingId)
+            .then(() => {
+                console.log(`🚪 Đã rời khỏi cuộc họp ${meetingId}`);
+
+                // Ngắt kết nối PeerJS khi rời cuộc gọi
+                if (peerRef.current) {
+                    peerRef.current.destroy();
+                    peerRef.current = null;
+                }
+
+                // Xóa video của người dùng
+                removeVideo(peerId);
+
+                // Cập nhật danh sách người gọi
+                setCallParticipants(prev => prev.filter(pid => pid !== peerId));
+
+                // Tắt mic & camera
+                if (localStreamRef.current) {
+                    localStreamRef.current
+                        .getTracks()
+                        .forEach(track => track.stop());
+                    localStreamRef.current = null;
+                }
+            })
+            .catch(err => console.error('⚠️ Không thể rời cuộc họp:', err));
+    };
+
+    // Gọi đến một Peer trong phòng họp
+    const makeCall = (peer, targetPeerId) => {
+        if (
+            !peer ||
+            !localStreamRef.current ||
+            videoRefs.current.some(video => video.id === targetPeerId)
+        )
+            return;
+
+        console.log(`📞 Gọi đến: ${targetPeerId}`);
+
+        const call = peer.call(targetPeerId, localStreamRef.current);
+        call.on('stream', remoteStream => {
+            addVideo(targetPeerId, remoteStream);
         });
     };
 
-    const removeRemoteVideo = peerId => {
-        setRemoteVideos(prev => {
-            const newVideos = { ...prev };
-            delete newVideos[peerId];
-            return newVideos;
-        });
+    // Thêm video vào giao diện
+    const addVideo = (peerId, stream, isLocal = false) => {
+        if (videoRefs.current.some(video => video.id === peerId)) return;
+
+        const video = document.createElement('video');
+        video.srcObject = stream;
+        video.autoplay = true;
+        video.muted = isLocal;
+        video.style.width = '200px';
+        video.style.margin = '5px';
+        video.id = peerId;
+
+        document.getElementById('videoContainer').appendChild(video);
+        videoRefs.current.push(video);
+    };
+    // Xóa video khỏi giao diện khi rời cuộc họp
+    const removeVideo = peerId => {
+        const videoIndex = videoRefs.current.findIndex(
+            video => video.id === peerId
+        );
+
+        if (videoIndex !== -1) {
+            const video = videoRefs.current[videoIndex];
+
+            video.pause();
+            video.srcObject = null;
+            video.remove();
+
+            videoRefs.current.splice(videoIndex, 1);
+        }
     };
 
     return (
         <div className={cx('container')}>
             <h2>Group Video Call</h2>
             <p>
-                Your Peer ID: <strong>{peerId || 'Loading...'}</strong>
+                Your Peer ID: <strong>{peerId}</strong>
             </p>
 
-            <div className={cx('videoContainer')}>
-                <h3>Your Video</h3>
-                <video
-                    ref={localVideoRef}
-                    autoPlay
-                    muted
-                    className={cx('video')}
-                    style={{
-                        width: '300px',
-                        border: '2px solid black',
-                        borderRadius: '8px'
-                    }}
-                ></video>
-            </div>
-            <h3>Remote Videos</h3>
-            <div className={cx('videoContainer')} id='videoContainer'>
-                {Object.entries(remoteVideos).map(([peerId, stream]) => (
-                    <video
-                        key={peerId}
-                        autoPlay
-                        className={cx('video')}
-                        style={{
-                            width: '300px',
-                            border: '2px solid black',
-                            borderRadius: '8px',
-                            marginTop: '10px'
-                        }}
-                        ref={video => {
-                            if (video) video.srcObject = stream;
-                        }}
-                    />
-                ))}
+            {/* Ô nhập ID để tạo/join cuộc họp */}
+            <div>
+                <input
+                    type='text'
+                    placeholder='Nhập ID cuộc họp'
+                    value={meetingId}
+                    onChange={e => setMeetingId(e.target.value)}
+                />
+                <button onClick={createMeeting}>Tạo cuộc họp</button>
+                <button onClick={joinMeeting}>Tham gia cuộc họp</button>
+                <button onClick={leaveMeeting}>Rời cuộc họp</button>
             </div>
 
-            <div className={cx('controls')}>
-                <input
-                    className={cx('peerIdInput')}
-                    type='text'
-                    placeholder='Nhập Peer ID cần gọi'
-                    value={remotePeerId}
-                    onChange={e => setRemotePeerId(e.target.value)}
-                />
-                <button className={cx('btnCall')} onClick={makeCall}>
-                    Call
-                </button>
+            {/* Danh sách cuộc họp */}
+            <div>
+                <h3>Danh sách cuộc họp:</h3>
+                <ul>
+                    {meetings.map((meet, index) => (
+                        <li key={index}>{meet}</li>
+                    ))}
+                </ul>
             </div>
+
+            {/* Danh sách người đang trong cuộc họp */}
+            <div>
+                <h3>Thành viên trong cuộc họp:</h3>
+                <ul>
+                    {callParticipants.map((pid, index) => (
+                        <li key={index}>{pid}</li>
+                    ))}
+                </ul>
+            </div>
+
+            {/* Khu vực hiển thị video */}
+            <div id='videoContainer'></div>
         </div>
     );
 };
