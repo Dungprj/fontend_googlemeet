@@ -17,9 +17,12 @@ const VideoCall = () => {
     const signalRRef = useRef(null);
     const localStreamRef = useRef(null);
     const videoRefs = useRef([]);
+    const videoContainerRef = useRef(null); // useRef để quản lý container video
 
     useEffect(() => {
         let peer = null;
+
+        //khởi tạo PeerJS và lấy connectionId từ SignalR
 
         const handleReceiveConnectionId = async connectionId => {
             console.log(
@@ -53,6 +56,8 @@ const VideoCall = () => {
             }
         };
 
+        //cập nhật danh sách người dùng đã kết nối
+
         const handleUpdateUserList = userList => {
             console.log(
                 '📌 Danh sách toàn bộ thành viên đã kết nối:',
@@ -60,11 +65,14 @@ const VideoCall = () => {
             );
             setRemotePeers(userList);
         };
+        //cập nhật danh sách cuộc họp
 
         const handleUpdateMeetingList = meetingList => {
             console.log('📅 Danh sách cuộc họp:', meetingList);
             setMeetings(meetingList);
         };
+
+        //cập nhật danh sách người tham gia cuộc họp
 
         const handleUpdateMeetingParticipants = (meetingId, participants) => {
             console.log(
@@ -189,7 +197,9 @@ const VideoCall = () => {
         video.style.margin = '5px';
         video.id = peerId;
 
-        document.getElementById('videoContainer').appendChild(video);
+        if (videoContainerRef.current) {
+            videoContainerRef.current.appendChild(video);
+        }
         videoRefs.current.push(video);
     };
     // Xóa video khỏi giao diện khi rời cuộc họp
@@ -250,7 +260,7 @@ const VideoCall = () => {
             </div>
 
             {/* Khu vực hiển thị video */}
-            <div id='videoContainer'></div>
+            <div ref={videoContainerRef} id='videoContainer'></div>
         </div>
     );
 };

@@ -1,9 +1,13 @@
 import * as signalR from '@microsoft/signalr';
 
 const createSignalRConnection = (
+    //nhận hàm để lấy connectionId
     onReceiveConnectionId,
+    //nhận hàm để lấy danh sách người dùng đã kết nối
     onUserListUpdate,
+    //nhận hàm để lấy danh sách cuộc họp
     onMeetingListUpdate,
+    //nhận hàm để lấy danh sách người tham gia cuộc họp
     onMeetingParticipantsUpdate
 ) => {
     const connection = new signalR.HubConnectionBuilder()
