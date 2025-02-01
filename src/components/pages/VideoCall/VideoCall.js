@@ -19,6 +19,36 @@ const VideoCall = () => {
     const videoRefs = useRef([]);
     const videoContainerRef = useRef(null); // useRef để quản lý container video
 
+    //lấy danh sách iceserver từ api
+    const getIceServersFromXirsys = async () => {
+        try {
+            const response = await fetch(
+                'https://global.xirsys.net/_turn/MyFirstApp',
+                {
+                    method: 'PUT', // API yêu cầu phương thức PUT
+                    headers: {
+                        Authorization:
+                            'Basic ' +
+                            btoa(
+                                'Dungak47:b8163796-e0a5-11ef-9dd3-0242ac130002'
+                            ),
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            if (!response.ok)
+                throw new Error('❌ Lỗi khi lấy ICE servers từ Xirsys');
+
+            const data = await response.json();
+            console.log('✅ ICE Servers nhận từ Xirsys:', data.v.iceServers);
+            return data.v.iceServers; // Trả về danh sách ICE servers
+        } catch (error) {
+            console.error('⚠️ Không thể lấy ICE servers:', error);
+            return []; // Trả về mảng rỗng nếu thất bại
+        }
+    };
+
     useEffect(() => {
         let peer = null;
 
@@ -30,27 +60,13 @@ const VideoCall = () => {
             );
             setPeerId(connectionId);
 
+            // Gọi API lấy danh sách ICE Servers từ Xirsys
+            const iceServers = await getIceServersFromXirsys();
+
             // Cấu hình ICE Servers từ Xirsys
             const peerConfig = {
                 config: {
-                    iceServers: [
-                        {
-                            urls: ['stun:hk-turn1.xirsys.com'] // STUN Server của Xirsys
-                        },
-                        {
-                            username:
-                                'Xyuh1tcn6Q7c23Fq8lU_Wh6-qwcdUIIZi_Nf-Yslt1c1TPPdvvKralrAX_rUeRe_AAAAAGeeMWpEdW5nYWs0Nw==',
-                            credential: 'ea903d94-e0a9-11ef-9f2e-0242ac120004',
-                            urls: [
-                                'turn:hk-turn1.xirsys.com:80?transport=udp',
-                                'turn:hk-turn1.xirsys.com:3478?transport=udp',
-                                'turn:hk-turn1.xirsys.com:80?transport=tcp',
-                                'turn:hk-turn1.xirsys.com:3478?transport=tcp',
-                                'turns:hk-turn1.xirsys.com:443?transport=tcp',
-                                'turns:hk-turn1.xirsys.com:5349?transport=tcp'
-                            ]
-                        }
-                    ]
+                    iceServers: iceServers
                 }
             };
 
