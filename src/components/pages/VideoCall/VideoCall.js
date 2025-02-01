@@ -30,11 +30,48 @@ const VideoCall = () => {
             );
             setPeerId(connectionId);
 
-            peer = new Peer(connectionId);
+            // Cấu hình STUN/TURN server từ Xirsys
+            const peerConfig = {
+                config: {
+                    iceServers: [
+                        { urls: 'stun:stun.l.google.com:19302' }, // STUN miễn phí của Google
+                        {
+                            urls: 'turn:global.xirsys.net',
+                            username: 'Dungak47',
+                            credential: 'b8163796-e0a5-11ef-9dd3-0242ac130002'
+                        }
+                    ]
+                }
+            };
+
+            // Khởi tạo PeerJS với ICE Server
+            peer = new Peer(connectionId, peerConfig);
             peerRef.current = peer;
 
             peer.on('open', async id => {
                 console.log(`✅ PeerJS đã khởi tạo với ID: ${id}`);
+
+                // Kiểm tra xem có sử dụng STUN/TURN không
+                peer.on('iceStateChanged', state => {
+                    console.log(`🔄 Trạng thái ICE: ${state}`);
+                });
+
+                peer.on('iceConnectionStateChange', () => {
+                    console.log(
+                        `📡 Kết nối ICE hiện tại: ${peer.iceConnectionState}`
+                    );
+                });
+
+                peer.on('iceCandidate', event => {
+                    if (event.candidate) {
+                        console.log(
+                            `🟢 ICE Candidate nhận được:`,
+                            event.candidate
+                        );
+                    } else {
+                        console.log('🚀 ICE Candidate đã hoàn tất.');
+                    }
+                });
             });
 
             peer.on('call', call => {

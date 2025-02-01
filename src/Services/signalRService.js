@@ -11,7 +11,9 @@ const createSignalRConnection = (
     onMeetingParticipantsUpdate
 ) => {
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl('https://localhost:7173/chatHub', { withCredentials: false })
+        .withUrl(`${process.env.REACT_APP_BASE_URL_HUB}`, {
+            withCredentials: false
+        })
         .withAutomaticReconnect([0, 2000, 5000, 10000])
         .configureLogging(signalR.LogLevel.Information)
         .build();
