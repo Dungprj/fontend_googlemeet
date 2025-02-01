@@ -30,15 +30,25 @@ const VideoCall = () => {
             );
             setPeerId(connectionId);
 
-            // Cấu hình STUN/TURN server từ Xirsys
+            // Cấu hình ICE Servers từ Xirsys
             const peerConfig = {
                 config: {
                     iceServers: [
-                        { urls: 'stun:stun.l.google.com:19302' }, // STUN miễn phí của Google
                         {
-                            urls: 'turn:global.xirsys.net',
-                            username: 'Dungak47',
-                            credential: 'b8163796-e0a5-11ef-9dd3-0242ac130002'
+                            urls: ['stun:hk-turn1.xirsys.com'] // STUN Server của Xirsys
+                        },
+                        {
+                            username:
+                                'Xyuh1tcn6Q7c23Fq8lU_Wh6-qwcdUIIZi_Nf-Yslt1c1TPPdvvKralrAX_rUeRe_AAAAAGeeMWpEdW5nYWs0Nw==',
+                            credential: 'ea903d94-e0a9-11ef-9f2e-0242ac120004',
+                            urls: [
+                                'turn:hk-turn1.xirsys.com:80?transport=udp',
+                                'turn:hk-turn1.xirsys.com:3478?transport=udp',
+                                'turn:hk-turn1.xirsys.com:80?transport=tcp',
+                                'turn:hk-turn1.xirsys.com:3478?transport=tcp',
+                                'turns:hk-turn1.xirsys.com:443?transport=tcp',
+                                'turns:hk-turn1.xirsys.com:5349?transport=tcp'
+                            ]
                         }
                     ]
                 }
