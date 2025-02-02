@@ -1,11 +1,10 @@
-import Header from '~/layouts/components/Header';
+import HeaderGoogle from '../components/HeaderGoogle';
 
 function Intro({ children }) {
     return (
         <div>
-            <Header />
-
-            <div className='container' style={{ marginTop: 100 }}>
+            <HeaderGoogle />
+            <div className='container'>
                 <div className='content'>{children}</div>
             </div>
         </div>

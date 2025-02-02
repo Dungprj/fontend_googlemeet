@@ -4,11 +4,14 @@ import classNames from 'classnames';
 import images from '~/assets/images';
 import styles from './Image.module.scss';
 
+const cx = classNames.bind(styles);
+
 const Image = forwardRef(
     (
         {
             src,
             alt,
+            circle = false,
             className,
             fallback: customFallback = images.noImage,
             ...props
@@ -21,9 +24,15 @@ const Image = forwardRef(
             setFallback(customFallback);
         };
 
+        const classes = cx('wrapper', {
+            [className]: className,
+            circle
+        });
+
         return (
             <img
-                className={classNames(styles.wrapper, className)}
+                className={cx('wrapper', classes)}
+                {...props}
                 ref={ref}
                 src={fallback || src}
                 alt={alt}

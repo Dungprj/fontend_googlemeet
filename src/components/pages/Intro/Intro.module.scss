@@ -1,0 +1,42 @@
+.wrapper {
+    width: 100%;
+    height: 90vh;
+}
+
+.container {
+    width: 100%;
+    height: inherit;
+    display: flex;
+}
+.content-left {
+    width: 50%;
+    height: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.content-left_title {
+}
+
+.content-left_btn {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 10px 25px;
+}
+.content-right {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.content-right_carousel {
+    width: 50%;
+    height: 50%;
+}
+.btnNext {
+    filter: 'invert(100%)';
+}
