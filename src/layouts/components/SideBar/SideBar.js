@@ -108,6 +108,13 @@ function SideBar() {
                     icon={<GPTIcon />}
                     activeIcon={<GPTIcon />}
                 />
+
+                <MenuItem
+                    title='GoogleMeet'
+                    to={config.routes.intro}
+                    icon={<GPTIcon />}
+                    activeIcon={<GPTIcon />}
+                />
                 {roles.includes('f056236f-2444-48a2-bcb8-7ca47e009744') && (
                     <>
                         <MenuItem

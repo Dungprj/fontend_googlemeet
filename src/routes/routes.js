@@ -1,5 +1,5 @@
 //Layouts
-import { HeaderOnly } from '~/layouts';
+import { HeaderOnly, Intro } from '~/layouts';
 
 //Pages
 import Home from '~/components/pages/Home';
@@ -8,6 +8,7 @@ import Profile from '~/components/pages/Profile';
 import Upload from '~/components/pages/Upload';
 import Search from '~/components/pages/Search';
 import Live from '~/components/pages/Live';
+import { default as Intros } from '~/components/pages/Intro';
 
 import TableUsers from '~/components/pages/TableUsers/TableUsers';
 import TableVideos from '~/components/pages/TableVideos/TableVideos';
@@ -37,7 +38,8 @@ const publicRoutes = [
     { path: config.routes.register, component: register, layout: HeaderOnly },
     { path: config.routes.foryou, component: Home },
     { path: config.routes.check, component: ApiChecker },
-    { path: config.routes.call, component: VideoCall }
+    { path: config.routes.call, component: VideoCall },
+    { path: config.routes.intro, component: Intros, layout: Intro }
 ];
 
 const privateRoutes = [

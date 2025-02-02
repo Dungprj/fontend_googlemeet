@@ -1,13 +1,12 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { privateRoutes, publicRoutes } from '~/routes';
-import DefaultLayout from '~/layouts';
+import { DefaultLayout } from '~/layouts';
 import { Fragment } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import NotFound from '~/components/pages/NotFound/NotFound';
-
 import PrivateRoute from './routes/PrivateRoute';
 
 const router = createBrowserRouter(
@@ -79,7 +78,7 @@ function App() {
                 pauseOnHover
                 theme='light'
             />
-            <RouterProvider router={router} />;
+            <RouterProvider router={router} />
         </>
     );
 }
