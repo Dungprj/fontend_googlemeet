@@ -23,7 +23,10 @@ function Intro() {
                         </div>
                         <div className={cx('content-left_btn')}>
                             <Button primary>Cuộc họp mới</Button>
-                            <input placeholder='Nhập một mã hoặc đường link' />
+                            <input
+                                className={cx('inpJoin')}
+                                placeholder='Nhập một mã hoặc đường link'
+                            />
                             <Button outline>Tham gia</Button>
                         </div>
                     </div>

@@ -10,7 +10,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border: 1px solid #000;
 }
 
 .header_left {
@@ -27,7 +26,7 @@
     width: 40%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-evenly;
 }
 
 .header_rightsub-center {
@@ -48,4 +47,57 @@
     height: 40px;
     border-radius: 50%;
     background-color: #f1f1f1;
+}
+/* 🎯 Responsive cho màn hình nhỏ hơn 1024px (Tablet) */
+@media (max-width: 1024px) {
+    .header_right {
+        width: 100%;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .header_rightsub-left,
+    .header_rightsub-center,
+    .header_rightsub_right {
+        min-width: 150px;
+        justify-content: space-evenly;
+    }
+}
+
+/* 🎯 Responsive cho màn hình nhỏ hơn 768px (Mobile) */
+@media (max-width: 768px) {
+    .header_right {
+        min-width: 100px;
+    }
+
+    .header_rightsub-left,
+    .header_rightsub-center,
+    .header_rightsub_right {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .avatar {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+/* 🎯 Responsive cho màn hình nhỏ hơn 480px (Mobile nhỏ) */
+@media (max-width: 480px) {
+    .header_right {
+        width: 50px;
+    }
+
+    .header_rightsub-left,
+    .header_rightsub-center,
+    .header_rightsub_right {
+        width: 20%;
+        align-items: center;
+    }
+
+    .avatar {
+        width: 30px;
+        height: 30px;
+    }
 }
