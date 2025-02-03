@@ -1,5 +1,6 @@
 .wrap {
     width: 100%;
+    padding-top: 15px;
 }
 
 .container {
@@ -13,8 +14,25 @@
 }
 
 .header_left {
+    width: 100%;
+    display: flex;
+    align-items: start;
 }
+.header_logo {
+    width: 100%;
+    height: 50px;
 
+    display: flex;
+    align-items: flex-start;
+}
+.btnLogoMeet {
+    min-width: 80px;
+    padding-left: 0px;
+}
+.txtMeet {
+    text-align: center;
+    color: #565454;
+}
 .header_right {
     width: 38%;
     display: flex;
@@ -48,6 +66,7 @@
     border-radius: 50%;
     background-color: #f1f1f1;
 }
+
 /* 🎯 Responsive cho màn hình nhỏ hơn 1024px (Tablet) */
 @media (max-width: 1024px) {
     .header_right {

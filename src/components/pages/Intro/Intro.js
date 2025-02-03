@@ -3,8 +3,41 @@ import styles from './Intro.module.scss';
 import Button from '~/components/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Menu from '~/components/Popper/Menu';
+import {
+    faLink,
+    faPlus,
+    faCalendarDay
+} from '@fortawesome/free-solid-svg-icons';
 const cx = classNames.bind(styles);
+
+const MENU_ITEMS = [
+    {
+        icon: <FontAwesomeIcon icon={faLink}></FontAwesomeIcon>,
+        title: 'Tạo một cuộc họp để sử dụng sau'
+    },
+    {
+        icon: <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>,
+        title: 'Bắt đầu một cuộc họp tức thì',
+        to: '/callin'
+    },
+    {
+        icon: <FontAwesomeIcon icon={faCalendarDay}></FontAwesomeIcon>,
+        title: 'Lên lịch trong lịch Google'
+    }
+];
 function Intro() {
+    //handle logic
+    const handleMenuChange = menuItem => {
+        switch (menuItem.type) {
+            case 'language':
+                // handle language change
+                break;
+            default:
+            // handle other menu items
+        }
+    };
     return (
         <>
             <div className={cx('wrapper')}>
@@ -22,7 +55,13 @@ function Intro() {
                             </p>
                         </div>
                         <div className={cx('content-left_btn')}>
-                            <Button primary>Cuộc họp mới</Button>
+                            <Menu
+                                items={MENU_ITEMS}
+                                onChange={handleMenuChange}
+                            >
+                                <Button primary>Cuộc họp mới</Button>
+                            </Menu>
+
                             <input
                                 className={cx('inpJoin')}
                                 placeholder='Nhập một mã hoặc đường link'

@@ -21,7 +21,7 @@ function HeaderGoogle() {
                         <div className={cx('header_logo')}>
                             <img src={images.logoGoogle} alt='Google Meet' />{' '}
                             <Button text className={cx('btnLogoMeet')}>
-                                Meet
+                                <h4 className={cx('txtMeet')}>Meet</h4>
                             </Button>
                         </div>
                     </div>

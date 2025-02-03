@@ -28,6 +28,10 @@ function Menu({
     const currentItem = history[history.length - 1];
     const { logout } = React.useContext(UserContext);
 
+    const [visible, setVisible] = useState(false);
+    const handleToggle = () => {
+        setVisible(prev => !prev);
+    };
     /*
         history = 
         [
@@ -107,15 +111,17 @@ function Menu({
 
     return (
         <Tippy
+            visible={visible}
+            onClickOutside={() => setVisible(false)} // Click ra ngoài sẽ đóng
             hideOnClick={hideOnClick}
             interactive={true}
             delay={[0, 800]}
-            offset={[10, 8]}
+            offset={[200, -50]}
             placement='bottom-end'
             render={renderResult}
             onHidden={handleResetMenu}
         >
-            {children}
+            {<div onClick={handleToggle}>{children}</div>}
         </Tippy>
     );
 }
