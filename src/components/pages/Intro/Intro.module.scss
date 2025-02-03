@@ -27,14 +27,14 @@
     padding: 10px 30px;
 }
 .inpJoin {
-    border: 1px solid #4d4e4f; /* Màu viền */
+    border: 2px solid #000; /* Màu viền */
     border-radius: var(--default-layout-border-radius);
     padding: 12px;
 }
 
-.inpJoin :focus {
-    border-color: #007bff; /* Màu xanh dương */
-    outline: none; /* Loại bỏ viền mặc định của trình duyệt */
+.inpJoin:focus {
+    outline: none;
+    border: 2px solid #0881e4; /* Màu viền */
 }
 
 .content-right {

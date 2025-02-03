@@ -20,7 +20,12 @@ import register from '~/components/pages/Register';
 import UploadDetail from '~/components/pages/Upload/component/UploadDetail/UploadDetail';
 import GPT from '~/components/pages/Gpt';
 import ApiChecker from '~/components/pages/ApiChecker';
-import VideoCall from '~/components/pages/VideoCall';
+
+import Call from '~/components/pages/Call';
+import GoogleMeet from '~/layouts/GoogleMeet';
+import CallGroup from '~/layouts/components/CallGroup';
+import NavCall from '~/layouts/components/NavCall';
+import SideBar from '~/layouts/components/SideBar';
 
 //Pulic routes
 const publicRoutes = [
@@ -38,7 +43,7 @@ const publicRoutes = [
     { path: config.routes.register, component: register, layout: HeaderOnly },
     { path: config.routes.foryou, component: Home },
     { path: config.routes.check, component: ApiChecker },
-    { path: config.routes.call, component: VideoCall },
+    { path: config.routes.call, component: SideBar, layout: GoogleMeet },
     { path: config.routes.intro, component: Intros, layout: Intro }
 ];
 

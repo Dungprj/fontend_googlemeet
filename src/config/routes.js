@@ -14,7 +14,7 @@ const routes = {
     managerVideo: '/managerVideo',
     gpt: '/gpt',
     check: '/check',
-    call: '/call',
+    call: '/calling',
     intro: '/intro'
 };
 

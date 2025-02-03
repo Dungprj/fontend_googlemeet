@@ -10,6 +10,7 @@ import {
     faPlus,
     faCalendarDay
 } from '@fortawesome/free-solid-svg-icons';
+import config from '~/config';
 const cx = classNames.bind(styles);
 
 const MENU_ITEMS = [
@@ -20,7 +21,7 @@ const MENU_ITEMS = [
     {
         icon: <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>,
         title: 'Bắt đầu một cuộc họp tức thì',
-        to: '/callin'
+        to: config.routes.call
     },
     {
         icon: <FontAwesomeIcon icon={faCalendarDay}></FontAwesomeIcon>,
