@@ -19,18 +19,18 @@ const MeetingProvider = ({ children }) => {
 
     useEffect(() => {}, []);
 
-    const openTab = tab => {
+    const toggleTab = tab => {
         console.log('trang thai khi dung toggle tab ', nav.TabPanel);
         console.log('chuan sang trang thai ', tab);
         setNav(prev => ({
             [Tab.Detail]: false,
             [Tab.Message]: false,
-            TabPanel: true,
-            [tab]: true // Chỉ mở tab được chọn
+            TabPanel: !prev[tab],
+            [tab]: !prev[tab]
         }));
     };
 
-    const toggleTabPanel = () => {
+    const closeTabPanel = () => {
         console.log('trang thai toggle tab ', nav.TabPanel);
         setNav(prev => ({
             TabPanel: !prev.TabPanel
@@ -38,7 +38,7 @@ const MeetingProvider = ({ children }) => {
     };
 
     return (
-        <MeetingContext.Provider value={{ nav, openTab, toggleTabPanel }}>
+        <MeetingContext.Provider value={{ nav, toggleTab, closeTabPanel }}>
             {children}
         </MeetingContext.Provider>
     );

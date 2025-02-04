@@ -20,6 +20,7 @@ const Button = forwardRef(
             gray = false,
             small = false,
             large = false,
+            outlinever1 = false,
             className,
             onClick,
             leftIcon,
@@ -63,6 +64,7 @@ const Button = forwardRef(
             small,
             large,
             disable,
+            outlinever1,
             rightIcon,
             leftIcon
         });
@@ -87,6 +89,7 @@ Button.propTypes = {
     rounded: PropTypes.bool,
     disable: PropTypes.bool,
     small: PropTypes.bool,
+    outlinever1: PropTypes.bool,
     large: PropTypes.bool,
     className: PropTypes.string,
     leftIcon: PropTypes.node,

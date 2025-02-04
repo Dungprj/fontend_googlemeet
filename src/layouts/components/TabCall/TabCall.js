@@ -6,10 +6,13 @@ import { MeetingContext } from '~/Context/MeetingContext';
 import DetailMeeting from './components/DetailMeeting/DetailMeeting';
 import Tab from '~/enums';
 import MessageMeeting from './components/MessageMeeting/MessageMeeting';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 const cx = classNames.bind(styles);
 
 function TabCall() {
-    const { nav, openTab } = useContext(MeetingContext);
+    const { nav } = useContext(MeetingContext);
 
     return (
         <div className={cx('wrapper', { close: !nav.TabPanel })}>

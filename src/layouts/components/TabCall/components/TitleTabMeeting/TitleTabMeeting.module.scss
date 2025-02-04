@@ -1,0 +1,16 @@
+.titleMeeting {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 5px 10px;
+}
+
+.icon-exit {
+    cursor: pointer;
+    color: black;
+    font-size: 25px;
+
+    padding: 5px 10px;
+}
