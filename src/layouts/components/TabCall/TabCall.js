@@ -4,6 +4,8 @@ import styles from './TabCall.module.scss';
 import React, { useContext } from 'react';
 import { MeetingContext } from '~/Context/MeetingContext';
 import DetailMeeting from './components/DetailMeeting/DetailMeeting';
+import ListUserMeeting from './components/ListUserMeeting/ListUserMeeting';
+
 import Tab from '~/enums';
 import MessageMeeting from './components/MessageMeeting/MessageMeeting';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,6 +21,7 @@ function TabCall() {
             <div className={cx('container')}>
                 {nav[Tab.Detail] && <DetailMeeting />}
                 {nav[Tab.Message] && <MessageMeeting />}
+                {nav[Tab.ListUser] && <ListUserMeeting />}
             </div>
         </div>
     );

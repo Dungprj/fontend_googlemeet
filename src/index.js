@@ -6,6 +6,7 @@ import GlobalStyle from '~/components/GlobalStyles';
 
 import { UserProvider } from '~/Context/UserContext/UserContext';
 import { MeetingProvider } from '~/Context/MeetingContext';
+import { CallProvider } from '~/Context/CallContext/CallContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,7 +14,9 @@ root.render(
     <GlobalStyle>
         <UserProvider>
             <MeetingProvider>
-                <App />
+                <CallProvider>
+                    <App />
+                </CallProvider>
             </MeetingProvider>
         </UserProvider>
     </GlobalStyle>

@@ -11,9 +11,11 @@ import {
     faMicrophoneSlash,
     faVideo,
     faVideoSlash,
+    faEllipsisVertical,
     faPhoneSlash,
     faCircleInfo,
-    faMessage
+    faMessage,
+    faUserGroup
 } from '@fortawesome/free-solid-svg-icons';
 const cx = classNames.bind(styles);
 
@@ -31,6 +33,10 @@ function NavCall() {
     };
     const handleTabMessage = () => {
         toggleTab(Tab.Message);
+    };
+
+    const handleTabEveryone = () => {
+        toggleTab(Tab.ListUser);
     };
 
     const toggleMic = () => {
@@ -84,6 +90,12 @@ function NavCall() {
                             ></FontAwesomeIcon>
                         )}
                     </Button>
+
+                    <Button outlinever1 className={cx('btnSetting')}>
+                        <FontAwesomeIcon
+                            icon={faEllipsisVertical}
+                        ></FontAwesomeIcon>
+                    </Button>
                     <Button
                         outlinever1
                         className={cx('btnLeave')}
@@ -99,6 +111,12 @@ function NavCall() {
                         onClick={handleTabDetail}
                     >
                         <FontAwesomeIcon icon={faCircleInfo}></FontAwesomeIcon>
+                    </Button>
+                    <Button outlinever1 className={cx('btnEveryone')}>
+                        <FontAwesomeIcon
+                            icon={faUserGroup}
+                            onClick={handleTabEveryone}
+                        ></FontAwesomeIcon>
                     </Button>
                     <Button
                         outlinever1

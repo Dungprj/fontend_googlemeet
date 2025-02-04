@@ -4,7 +4,10 @@ import Button from '~/components/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import Menu from '~/components/Popper/Menu';
+import React, { useEffect, useRef, useState } from 'react';
+
 import {
     faLink,
     faPlus,
@@ -29,16 +32,6 @@ const MENU_ITEMS = [
     }
 ];
 function Intro() {
-    //handle logic
-    const handleMenuChange = menuItem => {
-        switch (menuItem.type) {
-            case 'language':
-                // handle language change
-                break;
-            default:
-            // handle other menu items
-        }
-    };
     return (
         <>
             <div className={cx('wrapper')}>
@@ -56,10 +49,7 @@ function Intro() {
                             </p>
                         </div>
                         <div className={cx('content-left_btn')}>
-                            <Menu
-                                items={MENU_ITEMS}
-                                onChange={handleMenuChange}
-                            >
+                            <Menu items={MENU_ITEMS}>
                                 <Button primary>Cuộc họp mới</Button>
                             </Menu>
 
