@@ -5,13 +5,13 @@ import styles from './GoogleMeet.module.scss';
 const cx = classNames.bind(styles);
 function GoogleMeet({ children }) {
     return (
-        <>
-            <div className={cx('wrapper')}>
-                <CallGroup />
-                <div className='tab-content'>{children}</div>
+        <div className={cx('wrapper')}>
+            <div className={cx('container')}>
+                <CallGroup className={cx('call-group')} />
+                <div className={cx('tab-content')}>{children}</div>
             </div>
-            <NavCall />
-        </>
+            <NavCall className={cx('navCall')} />
+        </div>
     );
 }
 
