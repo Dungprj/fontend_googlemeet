@@ -12,12 +12,14 @@ function TitleTabMeeting({ title = '' }) {
     };
     return (
         <div className={cx('titleMeeting')}>
-            <h5>{title}</h5>
-            <FontAwesomeIcon
-                className={cx('icon-exit')}
-                icon={faXmark}
-                onClick={closeTabPanel}
-            ></FontAwesomeIcon>
+            <div className={cx('container')}>
+                <h5>{title}</h5>
+                <FontAwesomeIcon
+                    className={cx('icon-exit')}
+                    icon={faXmark}
+                    onClick={closeTabPanel}
+                ></FontAwesomeIcon>
+            </div>
         </div>
     );
 }

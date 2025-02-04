@@ -16,8 +16,10 @@ function TabCall() {
 
     return (
         <div className={cx('wrapper', { close: !nav.TabPanel })}>
-            {nav[Tab.Detail] && <DetailMeeting />}
-            {nav[Tab.Message] && <MessageMeeting />}
+            <div className={cx('container')}>
+                {nav[Tab.Detail] && <DetailMeeting />}
+                {nav[Tab.Message] && <MessageMeeting />}
+            </div>
         </div>
     );
 }

@@ -8,7 +8,9 @@ import Tab from '~/enums';
 
 import {
     faMicrophone,
+    faMicrophoneSlash,
     faVideo,
+    faVideoSlash,
     faPhoneSlash,
     faCircleInfo,
     faMessage
@@ -19,6 +21,9 @@ function NavCall() {
     // Truy xuất dữ liệu từ MeetingContext
     const { nav, toggleTab, toggleTabPanel } = useContext(MeetingContext);
     const [time, setTime] = useState('16:09 | imf-iqgz-zpj');
+    const [inCall, setInCall] = useState(true);
+    const [isMic, setIsMic] = useState(false);
+    const [isCam, setIsCam] = useState(false);
 
     console.log(time);
     const handleTabDetail = () => {
@@ -26,6 +31,20 @@ function NavCall() {
     };
     const handleTabMessage = () => {
         toggleTab(Tab.Message);
+    };
+
+    const toggleMic = () => {
+        setIsMic(!isMic);
+    };
+    const toggleCam = () => {
+        setIsCam(!isCam);
+    };
+
+    const leaveCall = () => {
+        setInCall(prev => {
+            alert('Leave');
+            return false;
+        });
     };
 
     return (
@@ -37,13 +56,39 @@ function NavCall() {
                     </div>
                 </div>
                 <div className={cx('nav-center')}>
-                    <Button outlinever1 className={cx('btnMic')}>
-                        <FontAwesomeIcon icon={faMicrophone}></FontAwesomeIcon>
+                    <Button
+                        outlinever1
+                        className={cx('btnMic')}
+                        onClick={toggleMic}
+                    >
+                        {isMic ? (
+                            <FontAwesomeIcon
+                                icon={faMicrophone}
+                            ></FontAwesomeIcon>
+                        ) : (
+                            <FontAwesomeIcon
+                                icon={faMicrophoneSlash}
+                            ></FontAwesomeIcon>
+                        )}
                     </Button>
-                    <Button outlinever1 className={cx('btnCam')}>
-                        <FontAwesomeIcon icon={faVideo}></FontAwesomeIcon>
+                    <Button
+                        outlinever1
+                        className={cx('btnCam')}
+                        onClick={toggleCam}
+                    >
+                        {isCam ? (
+                            <FontAwesomeIcon icon={faVideo}></FontAwesomeIcon>
+                        ) : (
+                            <FontAwesomeIcon
+                                icon={faVideoSlash}
+                            ></FontAwesomeIcon>
+                        )}
                     </Button>
-                    <Button outlinever1 className={cx('btnLeave')}>
+                    <Button
+                        outlinever1
+                        className={cx('btnLeave')}
+                        onClick={leaveCall}
+                    >
                         <FontAwesomeIcon icon={faPhoneSlash}></FontAwesomeIcon>
                     </Button>
                 </div>
@@ -58,7 +103,7 @@ function NavCall() {
                     <Button
                         outlinever1
                         className={cx('btnMessage')}
-                        onClick={handleTabDetail}
+                        onClick={handleTabMessage}
                     >
                         <FontAwesomeIcon icon={faMessage}></FontAwesomeIcon>
                     </Button>
