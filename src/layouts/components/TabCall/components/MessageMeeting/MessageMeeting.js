@@ -3,168 +3,37 @@ import styles from './MessageMeeting.module.scss';
 import TitleTabMeeting from '../TitleTabMeeting';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import React, { useContext, useState, useEffect } from 'react';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { CallContext } from '~/Context/CallContext/CallContext';
+
 const cx = classNames.bind(styles);
 function MessageMeeting() {
+    const {
+        peerId,
+        meetingId,
+        setMeetingId,
+        createMeeting,
+        joinMeeting,
+        leaveMeeting,
+        videoContainerRef,
+        localStreamRef,
+        callParticipants
+    } = useContext(CallContext);
     return (
         <div className={cx('wrap')}>
             <TitleTabMeeting title='Tin nhắn cuộc gọi' />
             <div className={cx('container')}>
                 <ul className={cx('listMessage')}>
                     <li>
-                        <span>Hing : xin chào mọi người </span>
+                        <span>peerId : {peerId} </span>
                     </li>
                     <li>
-                        <span>Hing : xin chào mọi người </span>
+                        <span>Meeting Id : {meetingId} </span>
                     </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>{' '}
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>{' '}
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>{' '}
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
-                    <li>
-                        <span>Hing : xin chào mọi người </span>
-                    </li>
+                    {callParticipants.map(obj => {
+                        return <li key={obj}>peerId : {obj} </li>;
+                    })}
                 </ul>
                 <div className={cx('blSendMessage')}>
                     <input className={cx('inpTinNhan', 'form-control')}></input>

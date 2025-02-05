@@ -139,7 +139,6 @@ const VideoCall = () => {
 
                 // Ngắt kết nối PeerJS khi rời cuộc gọi
                 if (peerRef.current) {
-                    peerRef.current.destroy();
                     peerRef.current = null;
                 }
 

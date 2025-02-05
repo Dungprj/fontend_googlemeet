@@ -4,10 +4,10 @@ import Button from '~/components/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import { useNavigate } from 'react-router-dom';
 import Menu from '~/components/Popper/Menu';
-import React, { useEffect, useRef, useState } from 'react';
-
+import React, { useEffect, useRef, useState, useContext } from 'react';
+import { CallContext } from '~/Context/CallContext/CallContext';
 import {
     faLink,
     faPlus,
@@ -16,22 +16,55 @@ import {
 import config from '~/config';
 const cx = classNames.bind(styles);
 
-const MENU_ITEMS = [
-    {
-        icon: <FontAwesomeIcon icon={faLink}></FontAwesomeIcon>,
-        title: 'Tạo một cuộc họp để sử dụng sau'
-    },
-    {
-        icon: <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>,
-        title: 'Bắt đầu một cuộc họp tức thì',
-        to: config.routes.call
-    },
-    {
-        icon: <FontAwesomeIcon icon={faCalendarDay}></FontAwesomeIcon>,
-        title: 'Lên lịch trong lịch Google'
-    }
-];
 function Intro() {
+    const navigate = useNavigate();
+    const {
+        peerId,
+        meetingId,
+        setMeetingId,
+        createMeeting,
+        joinMeeting,
+        leaveMeeting,
+        videoContainerRef,
+        getMediaStream,
+        localStreamRef
+    } = useContext(CallContext);
+
+    const [inpMeetingId, setInpMeetingId] = useState();
+
+    const handleTypingMeetingId = e => {
+        setInpMeetingId(e);
+        setMeetingId(e);
+    };
+
+    const handleCreateMeeting = async () => {
+        if (inpMeetingId) {
+            alert('tao phong ', inpMeetingId);
+            await createMeeting(inpMeetingId);
+        }
+    };
+
+    const MENU_ITEMS = [
+        {
+            icon: <FontAwesomeIcon icon={faLink}></FontAwesomeIcon>,
+            title: 'Tạo một cuộc họp để sử dụng sau'
+        },
+        {
+            icon: <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>,
+            title: 'Bắt đầu một cuộc họp tức thì',
+            to: config.routes.call
+        },
+        {
+            icon: <FontAwesomeIcon icon={faCalendarDay}></FontAwesomeIcon>,
+            title: 'Create'
+        }
+    ];
+
+    const handleJoinMeeting = async () => {
+        await joinMeeting(meetingId);
+        navigate(config.routes.call);
+    };
+
     return (
         <>
             <div className={cx('wrapper')}>
@@ -54,10 +87,16 @@ function Intro() {
                             </Menu>
 
                             <input
+                                value={inpMeetingId}
                                 className={cx('inpJoin')}
                                 placeholder='Nhập một mã hoặc đường link'
+                                onChange={e =>
+                                    handleTypingMeetingId(e.target.value)
+                                }
                             />
-                            <Button outline>Tham gia</Button>
+                            <Button outline onClick={handleJoinMeeting}>
+                                Tham gia
+                            </Button>
                         </div>
                     </div>
                     <div className={cx('content-right')}>
