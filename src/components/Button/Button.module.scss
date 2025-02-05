@@ -3,10 +3,10 @@
     align-items: center;
 
     justify-content: center;
-    min-width: 100px;
-    font-size: 1.3rem;
-    font-weight: 700;
-    padding: 4px 16px;
+    min-width: 130px;
+    font-size: 1rem;
+    font-weight: 100;
+    padding: 2px 10px;
     border-radius: 4px;
     text-align: center;
     font-family: var(--font-family);
@@ -52,25 +52,20 @@
     background-color: var(--primary);
     color: var(--white);
     border-color: var(--primary);
-
+    border-radius: var(--default-layout-border-radius);
+    padding: 10px 20px;
     &:hover {
-        background: linear-gradient(
-                0deg,
-                rgba(0, 0, 0, 0.06),
-                rgba(0, 0, 0, 0.06)
-            ),
-            #fe2c55;
-        border-color: var(--primary);
+        opacity: 0.9;
+        box-shadow: 1px 2px 10px rgba(0, 0, 0, 0.3);
     }
 }
 
 .outline {
     color: var(--primary);
-    border-color: currentColor;
 
     &:hover {
-        background-color: rgba(254, 44, 85, 0.06);
-        border-color: currentColor;
+        background-color: #dbe5f3;
+        border-radius: var(--default-layout-border-radius);
     }
 }
 
@@ -99,4 +94,14 @@
     width: 100%;
     min-width: 140px;
     padding: 14px 16px;
+}
+
+.outlinever1 {
+    width: 50px !important;
+    height: 50px !important;
+    min-width: 0 !important;
+    font-size: 22px;
+    color: white;
+    border-radius: 50%;
+    background-color: rgb(63, 60, 60) !important;
 }

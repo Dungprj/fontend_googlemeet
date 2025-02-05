@@ -104,7 +104,13 @@ function SideBar() {
 
                 <MenuItem
                     title='Call'
-                    to={config.routes.call}
+                    icon={<GPTIcon />}
+                    activeIcon={<GPTIcon />}
+                />
+
+                <MenuItem
+                    title='GoogleMeet'
+                    to={config.routes.intro}
                     icon={<GPTIcon />}
                     activeIcon={<GPTIcon />}
                 />

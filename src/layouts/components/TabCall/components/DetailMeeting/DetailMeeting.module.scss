@@ -1,0 +1,14 @@
+.chiTietCuocGoi {
+    width: 100%;
+    height: 95%;
+    overflow: auto;
+    background-color: white !important;
+}
+.list {
+    max-height: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 50px;
+    padding-left: 10px;
+}

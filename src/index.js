@@ -5,13 +5,19 @@ import reportWebVitals from './reportWebVitals';
 import GlobalStyle from '~/components/GlobalStyles';
 
 import { UserProvider } from '~/Context/UserContext/UserContext';
+import { MeetingProvider } from '~/Context/MeetingContext';
+import { CallProvider } from '~/Context/CallContext/CallContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     // <React.StrictMode>
     <GlobalStyle>
         <UserProvider>
-            <App />
+            <MeetingProvider>
+                <CallProvider>
+                    <App />
+                </CallProvider>
+            </MeetingProvider>
         </UserProvider>
     </GlobalStyle>
     // </React.StrictMode>

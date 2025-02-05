@@ -1,11 +1,10 @@
 import Tippy from '@tippyjs/react/headless';
-import { useState } from 'react';
 
 import classNames from 'classnames/bind';
 import styles from './Menu.module.scss';
 import { Wrapper as PopperWrapper } from '~/components/Popper/';
 import Header from './Header';
-import React from 'react';
+
 import MenuItem from './MenuItem';
 import PropTypes from 'prop-types';
 
@@ -13,7 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import config from '~/config';
 import { toast } from 'react-toastify';
 import { UserContext } from '~/Context/UserContext';
-
+import React, { useContext, useState, useEffect } from 'react';
+import { CallContext } from '~/Context/CallContext/CallContext';
 const cx = classNames.bind(styles);
 
 const defaultFn = () => {};
@@ -28,6 +28,22 @@ function Menu({
     const currentItem = history[history.length - 1];
     const { logout } = React.useContext(UserContext);
 
+    const [visible, setVisible] = useState(false);
+
+    const {
+        peerId,
+        meetingId,
+        setMeetingId,
+        createMeeting,
+        joinMeeting,
+        leaveMeeting,
+        videoContainerRef,
+        getMediaStream,
+        localStreamRef
+    } = useContext(CallContext);
+    const handleToggle = () => {
+        setVisible(prev => !prev);
+    };
     /*
         history = 
         [
@@ -57,6 +73,11 @@ function Menu({
     };
     const current = history[history.length - 1];
 
+    const handleCreateMeeting = async () => {
+        console.log('chuan bi tao cuoc hop ', meetingId);
+        await createMeeting(meetingId);
+    };
+
     const renderItems = () => {
         return current.data.map((item, index) => {
             const isParent = !!item.children;
@@ -73,6 +94,8 @@ function Menu({
                         } else {
                             if (item.title === 'Log out') {
                                 handleLogout();
+                            } else if (item.title === 'Create') {
+                                handleCreateMeeting();
                             }
                             onChange(item);
                         }
@@ -107,15 +130,17 @@ function Menu({
 
     return (
         <Tippy
+            visible={visible}
+            onClickOutside={() => setVisible(false)} // Click ra ngoài sẽ đóng
             hideOnClick={hideOnClick}
             interactive={true}
             delay={[0, 800]}
-            offset={[10, 8]}
+            offset={[200, -50]}
             placement='bottom-end'
             render={renderResult}
             onHidden={handleResetMenu}
         >
-            {children}
+            {<div onClick={handleToggle}>{children}</div>}
         </Tippy>
     );
 }

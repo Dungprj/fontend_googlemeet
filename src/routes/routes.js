@@ -1,5 +1,5 @@
 //Layouts
-import { HeaderOnly } from '~/layouts';
+import { HeaderOnly, Intro } from '~/layouts';
 
 //Pages
 import Home from '~/components/pages/Home';
@@ -8,6 +8,7 @@ import Profile from '~/components/pages/Profile';
 import Upload from '~/components/pages/Upload';
 import Search from '~/components/pages/Search';
 import Live from '~/components/pages/Live';
+import { default as Intros } from '~/components/pages/Intro';
 
 import TableUsers from '~/components/pages/TableUsers/TableUsers';
 import TableVideos from '~/components/pages/TableVideos/TableVideos';
@@ -19,7 +20,13 @@ import register from '~/components/pages/Register';
 import UploadDetail from '~/components/pages/Upload/component/UploadDetail/UploadDetail';
 import GPT from '~/components/pages/Gpt';
 import ApiChecker from '~/components/pages/ApiChecker';
-import VideoCall from '~/components/pages/VideoCall';
+
+import Call from '~/components/pages/Call';
+import GoogleMeet from '~/layouts/GoogleMeet';
+import CallGroup from '~/layouts/components/CallGroup';
+import NavCall from '~/layouts/components/NavCall';
+import SideBar from '~/layouts/components/SideBar';
+import TabCall from '~/layouts/components/TabCall';
 
 //Pulic routes
 const publicRoutes = [
@@ -37,7 +44,8 @@ const publicRoutes = [
     { path: config.routes.register, component: register, layout: HeaderOnly },
     { path: config.routes.foryou, component: Home },
     { path: config.routes.check, component: ApiChecker },
-    { path: config.routes.call, component: VideoCall }
+    { path: config.routes.call, component: TabCall, layout: GoogleMeet },
+    { path: config.routes.intro, component: Intros, layout: Intro }
 ];
 
 const privateRoutes = [

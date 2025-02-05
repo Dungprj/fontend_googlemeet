@@ -1,2 +1,6 @@
-export { default, default as DefaultLayout } from './DefaultLayout';
-export { default as HeaderOnly } from './HeaderOnly';
+import DefaultLayout from './DefaultLayout';
+import HeaderOnly from './HeaderOnly';
+
+import Intro from './Intro/Intro';
+
+export { DefaultLayout, HeaderOnly, Intro };

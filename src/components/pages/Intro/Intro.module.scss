@@ -1,0 +1,125 @@
+.wrapper {
+    width: 100%;
+    height: 90vh;
+}
+
+.container {
+    width: 100%;
+    height: inherit;
+    display: flex;
+}
+.content-left {
+    width: 50%;
+    height: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.content-left_title {
+}
+
+.content-left_btn {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 10px 30px;
+}
+.inpJoin {
+    border: 2px solid #000; /* Màu viền */
+    border-radius: var(--default-layout-border-radius);
+    padding: 12px;
+}
+
+.inpJoin:focus {
+    outline: none;
+    border: 2px solid #0881e4; /* Màu viền */
+}
+
+.content-right {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.content-right_carousel {
+    width: 50%;
+    height: 50%;
+}
+/* Responsive cho màn hình nhỏ hơn 1024px (tablet) */
+@media (max-width: 1024px) {
+    .wrapper {
+        height: auto; /* Tự động điều chỉnh chiều cao */
+    }
+
+    .container {
+        flex-direction: column; /* Xếp các phần tử theo chiều dọc */
+    }
+
+    .content-left,
+    .content-right {
+        width: 100%;
+        height: auto;
+        padding: 20px;
+    }
+
+    .content-right_carousel {
+        width: 80%;
+        height: auto;
+    }
+
+    .content-left_btn {
+        flex-wrap: wrap; /* Để nút không bị tràn */
+        justify-content: center;
+        gap: 10px;
+    }
+}
+
+/* Responsive cho màn hình nhỏ hơn 768px (mobile) */
+@media (max-width: 768px) {
+    .wrapper {
+        height: auto;
+    }
+
+    .content-left,
+    .content-right {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .content-right_carousel {
+        width: 90%;
+        height: auto;
+    }
+
+    .content-left_btn {
+        flex-direction: column;
+        width: 100%;
+        gap: 8px;
+    }
+
+    .inpJoin {
+        width: 100%;
+        padding: 10px;
+    }
+}
+
+/* Responsive cho màn hình nhỏ hơn 480px (mobile nhỏ) */
+@media (max-width: 480px) {
+    .content-left_btn {
+        flex-direction: column;
+        width: 100%;
+        gap: 5px;
+    }
+
+    .inpJoin {
+        width: 100%;
+        padding: 8px;
+    }
+
+    .content-right_carousel {
+        width: 100%;
+    }
+}

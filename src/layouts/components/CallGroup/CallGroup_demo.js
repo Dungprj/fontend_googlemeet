@@ -1,23 +1,32 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import Peer from 'peerjs';
 import createSignalRConnection from '../../../Services/signalRService';
-import classNames from 'classnames/bind';
-import styles from './VideoCall.module.scss';
 import * as signalR from '@microsoft/signalr';
-
+import classNames from 'classnames/bind';
+import styles from './CallGroup.module.scss';
+import { MeetingContext } from '~/Context/MeetingContext';
 const cx = classNames.bind(styles);
 
 const VideoCall = () => {
     const [peerId, setPeerId] = useState('');
     const [remotePeers, setRemotePeers] = useState([]); // Danh sách người đã kết nối
     const [callParticipants, setCallParticipants] = useState([]); // Danh sách người trong cuộc gọi
-    const [meetingId, setMeetingId] = useState(''); // ID cuộc họp
+
     const [meetings, setMeetings] = useState([]); // Danh sách các cuộc họp
     const peerRef = useRef(null);
     const signalRRef = useRef(null);
     const localStreamRef = useRef(null);
     const videoRefs = useRef([]);
     const videoContainerRef = useRef(null); // useRef để quản lý container video
+    //them vao
+    const { nav } = useContext(MeetingContext);
+    const [soLuongUser, setSoLuongUser] = useState(3);
+    const [meetingId, setMeetingId] = useState(''); // ID cuộc họp
+    const classes = cx({
+        hainguoi: soLuongUser == 2,
+        motnguoi: soLuongUser == 1,
+        trenhainguoi: soLuongUser > 2
+    });
 
     //kiểm tra băng thông
     const checkXirsysBandwidth = async () => {
@@ -87,124 +96,6 @@ const VideoCall = () => {
             return []; // Trả về mảng rỗng nếu thất bại
         }
     };
-
-    useEffect(() => {
-        let peer = null;
-
-        //khởi tạo PeerJS và lấy connectionId từ SignalR
-
-        const handleReceiveConnectionId = async connectionId => {
-            console.log(
-                `🔗 Nhận SignalR ID, sử dụng làm Peer ID: ${connectionId}`
-            );
-            setPeerId(connectionId);
-
-            // Gọi API lấy danh sách ICE Servers từ Xirsys
-            const iceServers = await getIceServersFromXirsys();
-
-            // Cấu hình ICE Servers từ Xirsys
-            const peerConfig = {
-                config: {
-                    iceServers: iceServers
-                }
-            };
-
-            // Khởi tạo PeerJS với ICE Server
-            peer = new Peer(connectionId, peerConfig);
-            peerRef.current = peer;
-
-            peer.on('open', async id => {
-                console.log(`✅ PeerJS đã khởi tạo với ID: ${id}`);
-
-                // Kiểm tra xem có sử dụng STUN/TURN không
-                peer.on('iceStateChanged', state => {
-                    console.log(`🔄 Trạng thái ICE: ${state}`);
-                });
-
-                peer.on('iceConnectionStateChange', () => {
-                    console.log(
-                        `📡 Kết nối ICE hiện tại: ${peer.iceConnectionState}`
-                    );
-                });
-
-                peer.on('iceCandidate', event => {
-                    if (event.candidate) {
-                        console.log(
-                            `🟢 ICE Candidate nhận được:`,
-                            event.candidate
-                        );
-                    } else {
-                        console.log('🚀 ICE Candidate đã hoàn tất.');
-                    }
-                });
-            });
-
-            peer.on('call', call => {
-                call.answer(localStreamRef.current);
-                call.on('stream', remoteStream => {
-                    addVideo(call.peer, remoteStream);
-                });
-            });
-
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: true,
-                    audio: true
-                });
-                localStreamRef.current = stream;
-                addVideo('you', stream, true);
-            } catch (error) {
-                console.error('❌ Không thể truy cập camera/mic:', error);
-            }
-        };
-
-        //cập nhật danh sách người dùng đã kết nối
-
-        const handleUpdateUserList = userList => {
-            console.log(
-                '📌 Danh sách toàn bộ thành viên đã kết nối:',
-                userList
-            );
-            setRemotePeers(userList);
-        };
-        //cập nhật danh sách cuộc họp
-
-        const handleUpdateMeetingList = meetingList => {
-            console.log('📅 Danh sách cuộc họp:', meetingList);
-            setMeetings(meetingList);
-        };
-
-        //cập nhật danh sách người tham gia cuộc họp
-
-        const handleUpdateMeetingParticipants = (meetingId, participants) => {
-            console.log(
-                `📞 Danh sách người trong cuộc họp ${meetingId}:`,
-                participants
-            );
-            setCallParticipants(participants);
-
-            // Khi danh sách cập nhật, gọi video đến tất cả thành viên mới
-            participants.forEach(participant => {
-                if (
-                    participant !== peerId &&
-                    !videoRefs.current.some(video => video.id === participant)
-                ) {
-                    makeCall(peerRef.current, participant);
-                }
-            });
-        };
-
-        signalRRef.current = createSignalRConnection(
-            handleReceiveConnectionId,
-            handleUpdateUserList,
-            handleUpdateMeetingList,
-            handleUpdateMeetingParticipants
-        );
-
-        return () => {
-            if (signalRRef.current) signalRRef.current.stop();
-        };
-    }, []);
 
     // Tạo cuộc họp mới
     const createMeeting = () => {
@@ -359,8 +250,29 @@ const VideoCall = () => {
                 </ul>
             </div>
 
-            {/* Khu vực hiển thị video */}
-            <div ref={videoContainerRef} id='videoContainer'></div>
+            <div className={cx('wrapper', { close: !nav.TabPanel })}>
+                <div
+                    id='videoContainer'
+                    ref={videoContainerRef}
+                    className={cx(
+                        'listVideo',
+                        { maxVideo: !nav.TabPanel },
+                        { miniVideo: nav.TabPanel }
+                    )}
+                >
+                    <iframe
+                        className={cx('vuser', classes)}
+                        width={'100%'}
+                        height={'100%'}
+                        src='https://www.youtube.com/embed/7FWQWaLsSuE?si=9BgV2f1jfy6j0MGS'
+                        title='YouTube video player'
+                        frameborder='0'
+                        allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+                        referrerpolicy='strict-origin-when-cross-origin'
+                        allowfullscreen
+                    ></iframe>
+                </div>
+            </div>
         </div>
     );
 };
