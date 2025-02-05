@@ -312,7 +312,8 @@ const CallProvider = ({ children }) => {
                 leaveMeeting,
                 localStreamRef,
                 videoContainerRef,
-                getMediaStream
+                getMediaStream,
+                addVideo
             }}
         >
             {children}
