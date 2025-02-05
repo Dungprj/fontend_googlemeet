@@ -163,7 +163,7 @@ const CallProvider = ({ children }) => {
                     peer.on('iceCandidate', event => {
                         if (event.candidate) {
                             console.log(
-                                `🟢 ICE Candidate nhận được:`,
+                                `🟢 ICE Candidate nhận được: là gì đây`,
                                 event.candidate
                             );
                         } else {
