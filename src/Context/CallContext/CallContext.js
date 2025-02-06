@@ -295,7 +295,20 @@ const CallProvider = ({ children }) => {
 
         const call = peer.call(targetPeerId, localStreamRef.current);
         call.on('stream', remoteStream => {
-            addVideo(targetPeerId, remoteStream);
+            if (!remoteStream) {
+                console.error(
+                    `❌ Không nhận được luồng stream từ đối phương ${call.peer}`
+                );
+                // Hiển thị thông báo lỗi cho người dùng nếu cần
+                alert(`Không nhận được video từ đối phương ${call.peer}`);
+                return;
+            }
+
+            console.log(
+                `🎥 Đã nhận được luồng stream từ đối phương ${call.peer}:`,
+                remoteStream
+            );
+            addVideo(call.peer, remoteStream);
         });
     };
 
