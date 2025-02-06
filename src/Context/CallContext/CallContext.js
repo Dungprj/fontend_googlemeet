@@ -34,7 +34,7 @@ const CallProvider = ({ children }) => {
                 headers: {
                     Authorization:
                         'Basic ' +
-                        btoa('Dungak48:22b52a34-e3db-11ef-af77-0242ac130002'),
+                        btoa('Dungak47:b8163796-e0a5-11ef-9dd3-0242ac130002'),
                     'Content-Type': 'application/json'
                 }
             });
@@ -163,7 +163,7 @@ const CallProvider = ({ children }) => {
                     peer.on('iceCandidate', event => {
                         if (event.candidate) {
                             console.log(
-                                `🟢 ICE Candidate nhận được: là gì đây`,
+                                `🟢 ICE Candidate nhận được:`,
                                 event.candidate
                             );
                         } else {
