@@ -174,25 +174,8 @@ const CallProvider = ({ children }) => {
                 });
 
                 peer.on('call', call => {
-                    console.log(`📞 Đã nhận cuộc gọi từ: ${call.peer}`); // Log ID peer của đối phương
-                    call.answer(localStreamRef.current); // Trả lời cuộc gọi
-
+                    call.answer(localStreamRef.current);
                     call.on('stream', remoteStream => {
-                        if (!remoteStream) {
-                            console.error(
-                                `❌ Không nhận được luồng stream từ đối phương ${call.peer}`
-                            );
-                            // Hiển thị thông báo lỗi cho người dùng nếu cần
-                            alert(
-                                `Không nhận được video từ đối phương ${call.peer}`
-                            );
-                            return;
-                        }
-
-                        console.log(
-                            `🎥 Đã nhận được luồng stream từ đối phương ${call.peer}:`,
-                            remoteStream
-                        );
                         addVideo(call.peer, remoteStream);
                     });
                 });
