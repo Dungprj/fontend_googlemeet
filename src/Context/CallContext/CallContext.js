@@ -107,6 +107,7 @@ const CallProvider = ({ children }) => {
             video.style.objectFit = 'cover';
             video.style.width = '100%';
             video.style.height = '100%';
+            video.playsInline = true; // Quan trọng cho iOS
             video.style.transform = 'scaleX(-1)';
             video.id = peerId;
             video.className = cx('vuser', {
@@ -173,10 +174,37 @@ const CallProvider = ({ children }) => {
                     });
 
                     peer.on('call', call => {
-                        call.answer(localStreamRef.current);
+                        // Đảm bảo có Local Stream trước khi answer
+                        if (localStreamRef.current) {
+                            call.answer(localStreamRef.current);
+                        } else {
+                            // Nếu chưa có stream, thử lấy lại
+                            getMediaStream().then(stream => {
+                                if (stream) {
+                                    localStreamRef.current = stream;
+                                    call.answer(stream);
+                                    addVideo(peerId, stream, true); // Hiển thị local video
+                                } else {
+                                    call.close(); // Đóng cuộc gọi nếu không có stream
+                                }
+                            });
+                        }
+
+                        // Xử lý khi nhận được remote stream
                         call.on('stream', remoteStream => {
-                            addVideo(call.peer, remoteStream);
+                            if (!remoteStream) {
+                                console.error(
+                                    '❌ Remote stream không tồn tại!'
+                                );
+                                return;
+                            }
+                            addVideo(call.peer, remoteStream); // Thêm video của đối phương
                         });
+
+                        // Xử lý lỗi
+                        call.on('error', err =>
+                            console.error('Lỗi cuộc gọi:', err)
+                        );
                     });
                 });
             }
@@ -185,19 +213,15 @@ const CallProvider = ({ children }) => {
         const handleUpdateUserList = userList => setRemotePeers(userList);
         const handleUpdateMeetingList = meetingList => setMeetings(meetingList);
         const handleUpdateMeetingParticipants = (meetingId, participants) => {
-            console.log(
-                `📞 Danh sách người trong cuộc họp ${meetingId}:`,
-                participants
-            );
             setCallParticipants(participants);
-
-            // Khi danh sách cập nhật, gọi video đến tất cả thành viên mới
-            participants.forEach(participant => {
+            participants.forEach(participantId => {
                 if (
-                    participant !== peerId &&
-                    !videoRefs.current.some(video => video.id === participant)
+                    participantId !== peerId &&
+                    !videoRefs.current[participantId] && // Chưa có video
+                    peerRef.current &&
+                    localStreamRef.current
                 ) {
-                    makeCall(peerRef.current, participant);
+                    makeCall(peerRef.current, participantId);
                 }
             });
         };
@@ -257,29 +281,43 @@ const CallProvider = ({ children }) => {
             .catch(err => console.error('Không thể tạo cuộc họp:', err));
     };
 
-    const joinMeeting = () => {
+    const joinMeeting = async () => {
         if (!meetingId.trim()) return;
-        signalRRef.current
-            .invoke('JoinMeeting', meetingId)
-            .catch(err => console.error('Không thể tham gia cuộc họp:', err));
+        try {
+            // Lấy Local Stream và gán vào ref
+            const stream = await getMediaStream();
+            if (!stream) {
+                alert('Không thể truy cập camera/micro!');
+                return;
+            }
+            localStreamRef.current = stream;
+            // Hiển thị video của bản thân
+            addVideo(peerId, stream, true);
+            // Tham gia phòng họp
+            await signalRRef.current.invoke('JoinMeeting', meetingId);
+        } catch (err) {
+            console.error('Không thể tham gia cuộc họp:', err);
+        }
     };
 
     const leaveMeeting = () => {
         if (!meetingId.trim()) return;
-        signalRRef.current
-            .invoke('LeaveMeeting', meetingId)
-            .then(() => {
-                setCallParticipants(prev => prev.filter(pid => pid !== peerId));
-
-                // Dừng tất cả các tracks trong local stream
-                if (localStreamRef.current) {
-                    localStreamRef.current
-                        .getTracks()
-                        .forEach(track => track.stop());
-                    localStreamRef.current = null; // Reset stream
-                }
-            })
-            .catch(err => console.error('Không thể rời cuộc họp:', err));
+        signalRRef.current.invoke('LeaveMeeting', meetingId).then(() => {
+            // Dừng tất cả stream
+            if (localStreamRef.current) {
+                localStreamRef.current
+                    .getTracks()
+                    .forEach(track => track.stop());
+                localStreamRef.current = null;
+            }
+            // Đóng tất cả kết nối Peer
+            Object.values(peerRef.current.connections).forEach(connections => {
+                connections.forEach(connection => connection.close());
+            });
+            // Xóa tất cả video element
+            videoContainerRef.current.innerHTML = '';
+            videoRefs.current = {};
+        });
     };
 
     // Gọi đến một Peer trong phòng họp
@@ -287,29 +325,34 @@ const CallProvider = ({ children }) => {
         if (
             !peer ||
             !localStreamRef.current ||
-            videoRefs.current.some(video => video.id === targetPeerId)
-        )
+            videoRefs.current[targetPeerId] // Đã tồn tại kết nối
+        ) {
             return;
+        }
 
-        console.log(`📞 Gọi đến: ${targetPeerId}`);
-
+        console.log(`📞 Đang gọi đến: ${targetPeerId}`);
         const call = peer.call(targetPeerId, localStreamRef.current);
+
+        // Xử lý khi nhận được remote stream
         call.on('stream', remoteStream => {
             if (!remoteStream) {
-                console.error(
-                    `❌ Không nhận được luồng stream từ đối phương ${call.peer}`
-                );
-                // Hiển thị thông báo lỗi cho người dùng nếu cần
-                alert(`Không nhận được video từ đối phương ${call.peer}`);
+                console.error(`❌ Không nhận stream từ ${targetPeerId}`);
                 return;
             }
-
-            alert(
-                `🎥 Đã nhận được luồng stream từ đối phương ${call.peer}:`,
-                remoteStream
-            );
-            addVideo(call.peer, remoteStream);
+            addVideo(targetPeerId, remoteStream);
         });
+
+        // Xử lý khi cuộc gọi bị đóng
+        call.on('close', () => {
+            console.log(`🔴 Cuộc gọi với ${targetPeerId} đã đóng`);
+            if (videoRefs.current[targetPeerId]) {
+                videoRefs.current[targetPeerId].remove(); // Xóa video element
+                delete videoRefs.current[targetPeerId];
+            }
+        });
+
+        // Xử lý lỗi
+        call.on('error', err => console.error('Lỗi cuộc gọi:', err));
     };
 
     return (
