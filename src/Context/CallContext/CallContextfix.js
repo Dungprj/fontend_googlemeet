@@ -150,16 +150,19 @@ function CallFixProvider({ children }) {
                     addVideo(call.peer, remoteStream);
                 });
             });
+        };
 
+        // Hàm lấy stream video và audio từ user
+        const getMediaStream = async () => {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
                     video: true,
                     audio: true
                 });
-                localStreamRef.current = stream;
-                addVideo('you', stream, true);
+                return stream; // Trả về stream nếu thành công
             } catch (error) {
-                console.error('❌ Không thể truy cập camera/mic:', error);
+                console.error('Không thể truy cập camera/mic:', error);
+                return null; // Trả về null nếu gặp lỗi
             }
         };
 
@@ -206,8 +209,27 @@ function CallFixProvider({ children }) {
             handleUpdateMeetingParticipants
         );
 
+        // Cleanup function khi component unmount
         return () => {
-            if (signalRRef.current) signalRRef.current.stop();
+            // Chỉ gọi destroy nếu peerRef.current là instance hợp lệ của Peer
+            if (
+                peerRef.current &&
+                typeof peerRef.current.destroy === 'function'
+            ) {
+                peerRef.current.destroy(); // Gọi destroy đúng cách
+                peerRef.current = null; // Reset peerRef
+            }
+            if (signalRRef.current) {
+                signalRRef.current.stop(); // Dừng SignalR khi unmount
+                signalRRef.current = null; // Reset signalRRef
+            }
+            // Dừng tất cả các tracks trong local stream
+            if (localStreamRef.current) {
+                localStreamRef.current
+                    .getTracks()
+                    .forEach(track => track.stop());
+                localStreamRef.current = null; // Reset stream
+            }
         };
     }, []);
 
@@ -220,8 +242,8 @@ function CallFixProvider({ children }) {
 
         signalRRef.current
             .invoke('CreateMeeting', meetingId)
-            .then(() => console.log(`📅 Đã tạo cuộc họp ${meetingId}`))
-            .catch(err => console.error('⚠️ Không thể tạo cuộc họp:', err));
+            .then(() => alert(`📅 Đã tạo cuộc họp ${meetingId}`))
+            .catch(err => alert('⚠️ Không thể tạo cuộc họp:', err));
     };
 
     // Tham gia cuộc họp với ID cụ thể
@@ -304,30 +326,41 @@ function CallFixProvider({ children }) {
     };
 
     // Thêm video vào giao diện
-    const addVideo = (peerId, stream, isLocal = false) => {
-        if (videoRefs.current.some(video => video.id === peerId)) return;
+    // Hàm thêm video với cleanup
+    const addVideo = useCallback(
+        (peerId, stream, isLocal = false) => {
+            if (!videoContainerRef.current || document.getElementById(peerId))
+                return;
 
-        const video = document.createElement('video');
-        video.srcObject = stream;
-        video.autoplay = true;
-        video.muted = isLocal;
-        video.style.objectFit = 'cover';
-        video.style.width = '100%';
-        video.style.height = '100%';
-        video.playsInline = true; // Quan trọng cho iOS
-        video.style.transform = 'scaleX(-1)';
-        video.id = peerId;
-        video.className = cx('vuser', {
-            hainguoi: soLuongUser === 2,
-            motnguoi: soLuongUser === 1,
-            trenhainguoi: soLuongUser > 2
-        });
-
-        if (videoContainerRef.current) {
+            const video = document.createElement('video');
+            video.srcObject = stream;
+            video.autoplay = true;
+            video.muted = isLocal;
+            video.style.objectFit = 'cover';
+            video.style.width = '100%';
+            video.style.height = '100%';
+            video.playsInline = true; // Quan trọng cho iOS
+            video.style.transform = 'scaleX(-1)';
+            video.id = peerId;
+            video.className = cx('vuser', {
+                hainguoi: soLuongUser === 2,
+                motnguoi: soLuongUser === 1,
+                trenhainguoi: soLuongUser > 2
+            });
+            videoRefs.current[peerId] = video;
             videoContainerRef.current.appendChild(video);
-        }
-        videoRefs.current.push(video);
-    };
+
+            // Trả về hàm dọn dẹp
+            return () => {
+                if (video.parentNode) {
+                    video.parentNode.removeChild(video);
+                }
+                delete videoRefs.current[peerId];
+                stream.getTracks().forEach(track => track.stop());
+            };
+        },
+        [videoContainerRef]
+    );
     // Xóa video khỏi giao diện khi rời cuộc họp
     const removeVideo = peerId => {
         const videoIndex = videoRefs.current.findIndex(

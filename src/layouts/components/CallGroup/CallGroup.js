@@ -23,39 +23,19 @@ function CallGroup() {
         addVideo
     } = useContext(CallContext);
 
-    // Xử lý media stream với useCallback
-    const handleGetMedia = useCallback(async () => {
-        const stream = await getMediaStream();
-        if (stream) {
+    const handleGetMediaStream = async () => {
+        try {
+            const stream = await getMediaStream();
             localStreamRef.current = stream;
-            return stream;
+            addVideo(peerId, stream, true);
+        } catch (error) {
+            console.error('❌ Không thể truy cập camera/mic:', error);
         }
-        return null;
-    }, [getMediaStream, localStreamRef]);
+    };
 
-    // Sửa useEffect đúng cách
     useEffect(() => {
-        let cleanupVideo = () => {};
-
-        const init = async () => {
-            const stream = await handleGetMedia();
-            if (stream) {
-                const cleanup = addVideo(peerId, stream, true);
-                if (cleanup) cleanupVideo = cleanup;
-            }
-        };
-
-        init();
-
-        // Cleanup khi unmount
-        return () => {
-            cleanupVideo();
-            const videoContainer = videoContainerRef.current;
-            if (videoContainer) {
-                videoContainer.innerHTML = ''; // Xóa tất cả video
-            }
-        };
-    }, [handleGetMedia, addVideo, videoContainerRef]);
+        handleGetMediaStream();
+    });
 
     return (
         <div className={cx('wrapper', { close: !nav.TabPanel })}>
