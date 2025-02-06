@@ -104,6 +104,7 @@ function SideBar() {
 
                 <MenuItem
                     title='Call'
+                    to={config.routes.calltest}
                     icon={<GPTIcon />}
                     activeIcon={<GPTIcon />}
                 />

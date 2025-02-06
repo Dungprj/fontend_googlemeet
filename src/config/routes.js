@@ -15,7 +15,8 @@ const routes = {
     gpt: '/gpt',
     check: '/check',
     call: '/calling',
-    intro: '/intro'
+    intro: '/intro',
+    calltest: '/calltest'
 };
 
 export default routes;

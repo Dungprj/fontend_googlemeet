@@ -27,6 +27,7 @@ import CallGroup from '~/layouts/components/CallGroup';
 import NavCall from '~/layouts/components/NavCall';
 import SideBar from '~/layouts/components/SideBar';
 import TabCall from '~/layouts/components/TabCall';
+import VideoCall from '~/components/pages/VideoCall';
 
 //Pulic routes
 const publicRoutes = [
@@ -44,6 +45,8 @@ const publicRoutes = [
     { path: config.routes.register, component: register, layout: HeaderOnly },
     { path: config.routes.foryou, component: Home },
     { path: config.routes.check, component: ApiChecker },
+    { path: config.routes.calltest, component: VideoCall },
+
     { path: config.routes.call, component: TabCall, layout: GoogleMeet },
     { path: config.routes.intro, component: Intros, layout: Intro }
 ];

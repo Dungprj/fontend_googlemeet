@@ -5,7 +5,7 @@ import Button from '~/components/Button';
 import React, { useContext, useState } from 'react';
 import { MeetingContext } from '~/Context/MeetingContext';
 import Tab from '~/enums';
-import { CallContext } from '~/Context/CallContext/CallContext';
+import { CallContext } from '~/Context/CallContext/CallContextfix';
 import {
     faMicrophone,
     faMicrophoneSlash,
@@ -20,7 +20,7 @@ import {
 const cx = classNames.bind(styles);
 
 function NavCall() {
-    const { localStreamRef } = useContext(CallContext);
+    const { localStreamRef, leaveMeeting } = useContext(CallContext);
     // Truy xuất dữ liệu từ MeetingContext
     const { nav, toggleTab, toggleTabPanel } = useContext(MeetingContext);
     const [time, setTime] = useState('16:09 | imf-iqgz-zpj');
@@ -53,7 +53,7 @@ function NavCall() {
 
     const leaveCall = () => {
         setInCall(prev => {
-            alert('Leave');
+            leaveMeeting();
             return false;
         });
     };

@@ -24,7 +24,7 @@ const CallProvider = ({ children }) => {
     const localStreamRef = useRef(null);
     const videoRefs = useRef([]);
     const videoContainerRef = useRef(null);
-    const [soLuongUser] = useState(5); // Sửa: Thêm state hoặc logic cập nhật
+    const [soLuongUser, setSoLuongUser] = useState(5); // Sửa: Thêm state hoặc logic cập nhật
 
     //kiểm tra băng thông
     const checkXirsysBandwidth = async () => {
@@ -174,6 +174,10 @@ const CallProvider = ({ children }) => {
                     });
 
                     peer.on('call', call => {
+                        if (!call) {
+                            console.error('❌ Call object không tồn tại');
+                            return;
+                        }
                         // Đảm bảo có Local Stream trước khi answer
                         if (localStreamRef.current) {
                             call.answer(localStreamRef.current);
@@ -284,16 +288,19 @@ const CallProvider = ({ children }) => {
     const joinMeeting = async () => {
         if (!meetingId.trim()) return;
         try {
-            // Lấy Local Stream và gán vào ref
             const stream = await getMediaStream();
             if (!stream) {
                 alert('Không thể truy cập camera/micro!');
                 return;
             }
             localStreamRef.current = stream;
-            // Hiển thị video của bản thân
+
+            // Đảm bảo peer đã được khởi tạo
+            if (!peerRef.current) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+
             addVideo(peerId, stream, true);
-            // Tham gia phòng họp
             await signalRRef.current.invoke('JoinMeeting', meetingId);
         } catch (err) {
             console.error('Không thể tham gia cuộc họp:', err);
@@ -332,6 +339,12 @@ const CallProvider = ({ children }) => {
 
         console.log(`📞 Đang gọi đến: ${targetPeerId}`);
         const call = peer.call(targetPeerId, localStreamRef.current);
+
+        // Sửa điều kiện kiểm tra call object
+        if (!call) {
+            alert('Không thể tạo cuộc gọi!');
+            return;
+        }
 
         // Xử lý khi nhận được remote stream
         call.on('stream', remoteStream => {

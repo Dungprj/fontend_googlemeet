@@ -1,7 +1,7 @@
 import classNames from 'classnames/bind';
 import styles from './CallGroup.module.scss';
 import React, { useContext, useState, useEffect, useCallback } from 'react';
-import { CallContext } from '~/Context/CallContext/CallContext';
+import { CallContext } from '~/Context/CallContext/CallContextfix';
 import { MeetingContext } from '~/Context/MeetingContext';
 
 const cx = classNames.bind(styles);

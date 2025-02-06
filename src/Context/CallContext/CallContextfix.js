@@ -1,13 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+    createContext,
+    useState,
+    useRef,
+    useEffect,
+    useCallback
+} from 'react';
 import Peer from 'peerjs';
-import createSignalRConnection from '../../../Services/signalRService';
+import createSignalRConnection from '~/Services/signalRService';
 import classNames from 'classnames/bind';
-import styles from './VideoCall.module.scss';
-import * as signalR from '@microsoft/signalr';
-
+import styles from '~/layouts/components/CallGroup/CallGroup.module.scss';
 const cx = classNames.bind(styles);
+const CallContext = createContext({});
 
-const VideoCall = () => {
+function CallFixProvider({ children }) {
     const [peerId, setPeerId] = useState('');
     const [remotePeers, setRemotePeers] = useState([]); // Danh sách người đã kết nối
     const [callParticipants, setCallParticipants] = useState([]); // Danh sách người trong cuộc gọi
@@ -18,7 +23,7 @@ const VideoCall = () => {
     const localStreamRef = useRef(null); //ok
     const videoRefs = useRef([]); //ok
     const videoContainerRef = useRef(null); // useRef để quản lý container video ok
-
+    const [soLuongUser, setSoLuongUser] = useState(5);
     //kiểm tra băng thông
     const checkXirsysBandwidth = async () => {
         try {
@@ -284,6 +289,19 @@ const VideoCall = () => {
             addVideo(targetPeerId, remoteStream);
         });
     };
+    // Hàm lấy stream video và audio từ user
+    const getMediaStream = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: true
+            });
+            return stream; // Trả về stream nếu thành công
+        } catch (error) {
+            console.error('Không thể truy cập camera/mic:', error);
+            return null; // Trả về null nếu gặp lỗi
+        }
+    };
 
     // Thêm video vào giao diện
     const addVideo = (peerId, stream, isLocal = false) => {
@@ -293,9 +311,17 @@ const VideoCall = () => {
         video.srcObject = stream;
         video.autoplay = true;
         video.muted = isLocal;
-        video.style.width = '200px';
-        video.style.margin = '5px';
+        video.style.objectFit = 'cover';
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.playsInline = true; // Quan trọng cho iOS
+        video.style.transform = 'scaleX(-1)';
         video.id = peerId;
+        video.className = cx('vuser', {
+            hainguoi: soLuongUser === 2,
+            motnguoi: soLuongUser === 1,
+            trenhainguoi: soLuongUser > 2
+        });
 
         if (videoContainerRef.current) {
             videoContainerRef.current.appendChild(video);
@@ -318,51 +344,27 @@ const VideoCall = () => {
             videoRefs.current.splice(videoIndex, 1);
         }
     };
-
     return (
-        <div className={cx('container')}>
-            <h2>Group Video Call</h2>
-            <p>
-                Your Peer ID: <strong>{peerId}</strong>
-            </p>
-
-            {/* Ô nhập ID để tạo/join cuộc họp */}
-            <div>
-                <input
-                    type='text'
-                    placeholder='Nhập ID cuộc họp'
-                    value={meetingId}
-                    onChange={e => setMeetingId(e.target.value)}
-                />
-                <button onClick={createMeeting}>Tạo cuộc họp</button>
-                <button onClick={joinMeeting}>Tham gia cuộc họp</button>
-                <button onClick={leaveMeeting}>Rời cuộc họp</button>
-            </div>
-
-            {/* Danh sách cuộc họp */}
-            <div>
-                <h3>Danh sách cuộc họp:</h3>
-                <ul>
-                    {meetings.map((meet, index) => (
-                        <li key={index}>{meet}</li>
-                    ))}
-                </ul>
-            </div>
-
-            {/* Danh sách người đang trong cuộc họp */}
-            <div>
-                <h3>Thành viên trong cuộc họp:</h3>
-                <ul>
-                    {callParticipants.map((pid, index) => (
-                        <li key={index}>{pid}</li>
-                    ))}
-                </ul>
-            </div>
-
-            {/* Khu vực hiển thị video */}
-            <div ref={videoContainerRef} id='videoContainer'></div>
-        </div>
+        <CallContext.Provider
+            value={{
+                peerId,
+                remotePeers,
+                callParticipants,
+                meetings,
+                meetingId,
+                setMeetingId,
+                createMeeting,
+                joinMeeting,
+                leaveMeeting,
+                localStreamRef,
+                videoContainerRef,
+                getMediaStream,
+                addVideo
+            }}
+        >
+            {children}
+        </CallContext.Provider>
     );
-};
+}
 
-export default VideoCall;
+export { CallContext, CallFixProvider };
