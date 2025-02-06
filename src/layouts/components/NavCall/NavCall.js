@@ -5,7 +5,7 @@ import Button from '~/components/Button';
 import React, { useContext, useState } from 'react';
 import { MeetingContext } from '~/Context/MeetingContext';
 import Tab from '~/enums';
-
+import { CallContext } from '~/Context/CallContext/CallContext';
 import {
     faMicrophone,
     faMicrophoneSlash,
@@ -20,12 +20,13 @@ import {
 const cx = classNames.bind(styles);
 
 function NavCall() {
+    const { localStreamRef } = useContext(CallContext);
     // Truy xuất dữ liệu từ MeetingContext
     const { nav, toggleTab, toggleTabPanel } = useContext(MeetingContext);
     const [time, setTime] = useState('16:09 | imf-iqgz-zpj');
     const [inCall, setInCall] = useState(true);
-    const [isMic, setIsMic] = useState(false);
-    const [isCam, setIsCam] = useState(false);
+    const [isMic, setIsMic] = useState(true);
+    const [isCam, setIsCam] = useState(true);
 
     console.log(time);
     const handleTabDetail = () => {
@@ -40,9 +41,13 @@ function NavCall() {
     };
 
     const toggleMic = () => {
+        const audioTrack = localStreamRef.current?.getAudioTracks()[0];
+        if (audioTrack) audioTrack.enabled = !audioTrack.enabled;
         setIsMic(!isMic);
     };
     const toggleCam = () => {
+        const videoTrack = localStreamRef.current?.getVideoTracks()[0];
+        if (videoTrack) videoTrack.enabled = !videoTrack.enabled;
         setIsCam(!isCam);
     };
 

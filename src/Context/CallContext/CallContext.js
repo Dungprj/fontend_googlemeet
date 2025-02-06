@@ -24,7 +24,7 @@ const CallProvider = ({ children }) => {
     const localStreamRef = useRef(null);
     const videoRefs = useRef([]);
     const videoContainerRef = useRef(null);
-    const [soLuongUser] = useState(3); // Sửa: Thêm state hoặc logic cập nhật
+    const [soLuongUser] = useState(5); // Sửa: Thêm state hoặc logic cập nhật
 
     //kiểm tra băng thông
     const checkXirsysBandwidth = async () => {
@@ -97,8 +97,8 @@ const CallProvider = ({ children }) => {
     // Hàm thêm video với cleanup
     const addVideo = useCallback(
         (peerId, stream, isLocal = false) => {
-            const videoContainer = videoContainerRef.current;
-            if (!videoContainer || document.getElementById(peerId)) return;
+            if (!videoContainerRef.current || document.getElementById(peerId))
+                return;
 
             const video = document.createElement('video');
             video.srcObject = stream;
@@ -116,7 +116,7 @@ const CallProvider = ({ children }) => {
                 trenhainguoi: soLuongUser > 2
             });
             videoRefs.current[peerId] = video;
-            videoContainer.appendChild(video);
+            videoContainerRef.current.appendChild(video);
 
             // Trả về hàm dọn dẹp
             return () => {

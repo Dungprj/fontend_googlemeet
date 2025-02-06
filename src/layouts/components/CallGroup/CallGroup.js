@@ -8,7 +8,7 @@ const cx = classNames.bind(styles);
 
 function CallGroup() {
     const { nav } = useContext(MeetingContext);
-    const [soLuongUser] = useState(3); // Sửa: Thêm state hoặc logic cập nhật
+    const [soLuongUser] = useState(5); // Sửa: Thêm state hoặc logic cập nhật
 
     const {
         peerId,
