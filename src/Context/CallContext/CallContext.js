@@ -114,7 +114,7 @@ const CallProvider = ({ children }) => {
                 motnguoi: soLuongUser === 1,
                 trenhainguoi: soLuongUser > 2
             });
-
+            videoRefs.current[peerId] = video;
             videoContainer.appendChild(video);
 
             // Trả về hàm dọn dẹp
@@ -122,6 +122,7 @@ const CallProvider = ({ children }) => {
                 if (video.parentNode) {
                     video.parentNode.removeChild(video);
                 }
+                delete videoRefs.current[peerId];
                 stream.getTracks().forEach(track => track.stop());
             };
         },
@@ -173,8 +174,25 @@ const CallProvider = ({ children }) => {
                 });
 
                 peer.on('call', call => {
-                    call.answer(localStreamRef.current);
+                    console.log(`📞 Đã nhận cuộc gọi từ: ${call.peer}`); // Log ID peer của đối phương
+                    call.answer(localStreamRef.current); // Trả lời cuộc gọi
+
                     call.on('stream', remoteStream => {
+                        if (!remoteStream) {
+                            console.error(
+                                `❌ Không nhận được luồng stream từ đối phương ${call.peer}`
+                            );
+                            // Hiển thị thông báo lỗi cho người dùng nếu cần
+                            alert(
+                                `Không nhận được video từ đối phương ${call.peer}`
+                            );
+                            return;
+                        }
+
+                        console.log(
+                            `🎥 Đã nhận được luồng stream từ đối phương ${call.peer}:`,
+                            remoteStream
+                        );
                         addVideo(call.peer, remoteStream);
                     });
                 });
