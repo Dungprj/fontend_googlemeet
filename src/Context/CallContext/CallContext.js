@@ -171,12 +171,12 @@ const CallProvider = ({ children }) => {
                             console.log('🚀 ICE Candidate đã hoàn tất.');
                         }
                     });
-                });
 
-                peer.on('call', call => {
-                    call.answer(localStreamRef.current);
-                    call.on('stream', remoteStream => {
-                        addVideo(call.peer, remoteStream);
+                    peer.on('call', call => {
+                        call.answer(localStreamRef.current);
+                        call.on('stream', remoteStream => {
+                            addVideo(call.peer, remoteStream);
+                        });
                     });
                 });
             }
@@ -304,7 +304,7 @@ const CallProvider = ({ children }) => {
                 return;
             }
 
-            console.log(
+            alert(
                 `🎥 Đã nhận được luồng stream từ đối phương ${call.peer}:`,
                 remoteStream
             );
