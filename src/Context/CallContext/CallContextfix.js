@@ -9,6 +9,9 @@ import Peer from 'peerjs';
 import createSignalRConnection from '~/Services/signalRService';
 import classNames from 'classnames/bind';
 import styles from '~/layouts/components/CallGroup/CallGroup.module.scss';
+
+import $ from 'jquery';
+import 'jquery-ui-dist/jquery-ui';
 const cx = classNames.bind(styles);
 const CallContext = createContext({});
 
@@ -23,7 +26,7 @@ function CallFixProvider({ children }) {
     const localStreamRef = useRef(null); //ok
     const videoRefs = useRef([]); //ok
     const videoContainerRef = useRef(null); // useRef để quản lý container video ok
-    const [soLuongUser, setSoLuongUser] = useState(5);
+
     //kiểm tra băng thông
     const checkXirsysBandwidth = async () => {
         try {
@@ -102,6 +105,7 @@ function CallFixProvider({ children }) {
             console.log(
                 `🔗 Nhận SignalR ID, sử dụng làm Peer ID: ${connectionId}`
             );
+
             setPeerId(connectionId);
 
             // Gọi API lấy danh sách ICE Servers từ Xirsys
@@ -120,7 +124,7 @@ function CallFixProvider({ children }) {
 
             peer.on('open', async id => {
                 console.log(`✅ PeerJS đã khởi tạo với ID: ${id}`);
-
+                setPeerId(id);
                 // Kiểm tra xem có sử dụng STUN/TURN không
                 peer.on('iceStateChanged', state => {
                     console.log(`🔄 Trạng thái ICE: ${state}`);
@@ -255,7 +259,9 @@ function CallFixProvider({ children }) {
 
         signalRRef.current
             .invoke('JoinMeeting', meetingId)
-            .then(() => console.log(`✅ Đã tham gia cuộc họp ${meetingId}`))
+            .then(() => {
+                console.log(`✅ Đã tham gia cuộc họp ${meetingId}`);
+            })
             .catch(err =>
                 console.error('⚠️ Không thể tham gia cuộc họp:', err)
             );
@@ -328,26 +334,29 @@ function CallFixProvider({ children }) {
     // Thêm video vào giao diện
     // Hàm thêm video với cleanup
     const addVideo = useCallback(
-        (peerId, stream, isLocal = false) => {
-            if (!videoContainerRef.current || document.getElementById(peerId))
+        (peerId_nhan, stream, isLocal = false) => {
+            if (
+                !videoContainerRef.current ||
+                document.getElementById(peerId_nhan)
+            )
                 return;
 
             const video = document.createElement('video');
             video.srcObject = stream;
             video.autoplay = true;
             video.muted = isLocal;
-            video.style.objectFit = 'cover';
-            video.style.width = '100%';
-            video.style.height = '100%';
+
             video.playsInline = true; // Quan trọng cho iOS
-            video.style.transform = 'scaleX(-1)';
-            video.id = peerId;
+
+            video.id = peerId_nhan;
+
+            console.log('peerid hien tai : ', peerId);
+
             video.className = cx('vuser', {
-                hainguoi: soLuongUser === 2,
-                motnguoi: soLuongUser === 1,
-                trenhainguoi: soLuongUser > 2
+                you: isLocal
             });
-            videoRefs.current[peerId] = video;
+
+            videoRefs.current[peerId_nhan] = video;
             videoContainerRef.current.appendChild(video);
 
             // Trả về hàm dọn dẹp
@@ -355,11 +364,11 @@ function CallFixProvider({ children }) {
                 if (video.parentNode) {
                     video.parentNode.removeChild(video);
                 }
-                delete videoRefs.current[peerId];
+                delete videoRefs.current[peerId_nhan];
                 stream.getTracks().forEach(track => track.stop());
             };
         },
-        [videoContainerRef]
+        [callParticipants, videoContainerRef]
     );
     // Xóa video khỏi giao diện khi rời cuộc họp
     const removeVideo = peerId => {
@@ -385,6 +394,7 @@ function CallFixProvider({ children }) {
                 callParticipants,
                 meetings,
                 meetingId,
+                videoRefs,
                 setMeetingId,
                 createMeeting,
                 joinMeeting,

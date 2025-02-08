@@ -8,7 +8,6 @@ const cx = classNames.bind(styles);
 
 function CallGroup() {
     const { nav } = useContext(MeetingContext);
-    const [soLuongUser] = useState(5); // Sửa: Thêm state hoặc logic cập nhật
 
     const {
         peerId,
@@ -17,6 +16,8 @@ function CallGroup() {
         createMeeting,
         joinMeeting,
         leaveMeeting,
+        videoRefs,
+        callParticipants,
         videoContainerRef,
         getMediaStream,
         localStreamRef,
@@ -34,20 +35,37 @@ function CallGroup() {
     };
 
     useEffect(() => {
-        handleGetMediaStream();
-    });
+        if (!localStreamRef.current) {
+            handleGetMediaStream();
+        }
+    }, [callParticipants]);
 
     return (
         <div className={cx('wrapper', { close: !nav.TabPanel })}>
             <div
                 ref={videoContainerRef}
-                id='videoContainer'
+                id='draggable'
                 className={cx(
                     'listVideo',
+                    'ui-widget-content',
                     { maxVideo: !nav.TabPanel },
                     { miniVideo: nav.TabPanel }
                 )}
-            ></div>
+            >
+                {
+                    // <iframe
+                    //     className={cx('vuser')}
+                    //     width={'100%'}
+                    //     height={'auto'}
+                    //     src='https://www.youtube.com/embed/PRQq54KKtFY?si=DJy85dvO3o3Mhn4k'
+                    //     title='YouTube video player'
+                    //     frameborder='0'
+                    //     allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+                    //     referrerpolicy='strict-origin-when-cross-origin'
+                    //     allowfullscreen
+                    // ></iframe>
+                }
+            </div>
         </div>
     );
 }

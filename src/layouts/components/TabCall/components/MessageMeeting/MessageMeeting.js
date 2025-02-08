@@ -20,6 +20,13 @@ function MessageMeeting() {
         localStreamRef,
         callParticipants
     } = useContext(CallContext);
+
+    const handleRenderListUsers = () => {
+        callParticipants.map(obj => {
+            return <li key={obj}>peerId : {obj} </li>;
+        });
+    };
+
     return (
         <div className={cx('wrap')}>
             <TitleTabMeeting title='Tin nhắn cuộc gọi' />
@@ -31,9 +38,7 @@ function MessageMeeting() {
                     <li>
                         <span>Meeting Id : {meetingId} </span>
                     </li>
-                    {callParticipants.map(obj => {
-                        return <li key={obj}>peerId : {obj} </li>;
-                    })}
+                    {handleRenderListUsers()}
                 </ul>
                 <div className={cx('blSendMessage')}>
                     <input className={cx('inpTinNhan', 'form-control')}></input>

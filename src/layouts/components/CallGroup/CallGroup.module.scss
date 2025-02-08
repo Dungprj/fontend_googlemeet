@@ -14,12 +14,11 @@
     height: 100%;
 
     background-color: var(--default-background-googlemeet-color);
-
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 5px;
+    gap: 10px;
 }
 .maxVideo {
     padding: 1% 8%;
@@ -27,16 +26,34 @@
 .miniVideo {
     padding: 5% 1%;
 }
-.motnguoi {
-    width: 100%;
+
+.you {
+    max-width: 250px !important;
+    position: fixed;
+    bottom: 100px;
+    right: 50px;
 }
-.hainguoi {
-    width: 50%;
-    padding: 0px 5px;
+.vuser {
+    flex: 1 1 calc(50% - 10px); /* Mặc định là 2 video trên 1 hàng */
+    max-width: calc(50% - 10px);
+    aspect-ratio: 16 / 9; /* Giữ tỉ lệ video */
+    background-color: black;
 }
-.trenhainguoi {
-    width: 33%;
-    height: 50%;
+
+/* Khi có hơn 2 video -> Chuyển sang layout lưới */
+.listVideo:has(.vuser:nth-child(3)) {
+    justify-content: flex-start;
+}
+
+.listVideo .vuser:nth-child(n + 3) {
+    flex: 1 1 calc(33.33% - 10px); /* 3 video trên 1 hàng */
+    max-width: calc(33.33% - 10px);
+}
+
+/* Khi có nhiều video -> Chia nhỏ hơn */
+.listVideo .vuser:nth-child(n + 5) {
+    flex: 1 1 calc(25% - 10px); /* 4 video trên 1 hàng */
+    max-width: calc(25% - 10px);
 }
 
 /* 🎯 Responsive cho màn hình nhỏ hơn 480px (Mobile nhỏ) */

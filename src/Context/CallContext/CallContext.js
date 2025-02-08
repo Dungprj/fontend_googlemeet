@@ -131,7 +131,7 @@ const CallProvider = ({ children }) => {
     );
 
     useEffect(() => {
-        // Hàm xử lý bất đồng bộ để khởi tạo Peer
+        // Hàm xử lý bất đồng bộ để khởi tạo Pe er
         const initializePeer = async connectionId => {
             setPeerId(connectionId);
 

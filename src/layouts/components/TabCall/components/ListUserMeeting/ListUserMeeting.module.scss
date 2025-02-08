@@ -18,6 +18,20 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 0px 10px;
+    cursor: pointer;
+}
+.you {
+}
+.blInfo {
+    display: flex;
+
+    margin-left: 10px;
+    justify-content: space-between;
+    gap: 10px;
+}
+.btnOption {
+    padding-right: 25px;
 }
 .bodyTab {
     max-height: inherit;
@@ -28,6 +42,10 @@
     list-style-type: none;
     overflow: auto;
     padding: 0px 0px;
+}
+
+.bodyTab .you {
+    order: -1;
 }
 .avatar {
     width: 50px;
