@@ -159,6 +159,24 @@ function CallFixProvider({ children }) {
         // Hàm lấy stream video và audio từ user
         const getMediaStream = async () => {
             try {
+                // Kiểm tra quyền truy cập camera
+                const permissionStatus = await navigator.permissions.query({
+                    name: 'camera'
+                });
+
+                // Nếu quyền chưa được cấp hoặc từ chối, yêu cầu người dùng cấp quyền
+                if (permissionStatus.state !== 'granted') {
+                    const userConsent = window.confirm(
+                        'Bạn có muốn cấp quyền sử dụng camera không?'
+                    );
+                    if (!userConsent) {
+                        throw new Error(
+                            'Người dùng không cấp quyền sử dụng camera.'
+                        );
+                    }
+                }
+
+                // Tiến hành lấy stream từ camera
                 const stream = await navigator.mediaDevices.getUserMedia({
                     video: true,
                     audio: true
