@@ -44,7 +44,6 @@ function CallGroup() {
         <div className={cx('wrapper', { close: !nav.TabPanel })}>
             <div
                 ref={videoContainerRef}
-                id='draggable'
                 className={cx(
                     'listVideo',
                     'ui-widget-content',

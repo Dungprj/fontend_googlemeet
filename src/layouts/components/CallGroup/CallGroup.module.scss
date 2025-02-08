@@ -32,12 +32,14 @@
     position: fixed;
     bottom: 100px;
     right: 50px;
+    transform: scaleX(-1);
 }
 .vuser {
     flex: 1 1 calc(50% - 10px); /* Mặc định là 2 video trên 1 hàng */
     max-width: calc(50% - 10px);
     aspect-ratio: 16 / 9; /* Giữ tỉ lệ video */
     background-color: black;
+    transform: scaleX(-1);
 }
 
 /* Khi có hơn 2 video -> Chuyển sang layout lưới */
